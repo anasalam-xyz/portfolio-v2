@@ -1,26 +1,234 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root,
+[data-theme="light"] {
+  /* Warm Corduroy & Deeper Amber Palette (Light Mode - Reference Match) */
+  --canvas: #FAF7F2;          /* Warm linen canvas */
+  --surface: #FFFFFF;         /* Crisp elevated cards */
+  --surface-elevated: #F3ECE2;/* Subtle warm elevation */
+  --foreground: #1C1613;      /* Deep roasted espresso */
+  --muted: #63574A;           /* Warm mineral stone (5.8:1 contrast on canvas) */
+  --accent: #B5611A;          /* Deeper amber (6.0:1 contrast on #FAF7F2 canvas) */
+  --accent-hover: #9C5214;
+  --accent-glow: rgba(181, 97, 26, 0.12);
+  --earth: #B88656;           /* Toasted corduroy camel */
+  --slate-navy: #1E2229;      /* Inner collar deep slate */
+  --espresso: #1C1613;        /* Horn button espresso */
+  --border: rgba(28, 22, 19, 0.09);
+  --border-strong: rgba(28, 22, 19, 0.16);
+  --pill-bg: rgba(255, 255, 255, 0.90);
+  --pill-border: rgba(28, 22, 19, 0.11);
+  --dock-bg: rgba(255, 255, 255, 0.90);
+  --dock-border: rgba(28, 22, 19, 0.12);
+  --grid-line: rgba(28, 22, 19, 0.035);
+  --cta-primary-bg: #B5611A;
+  --cta-primary-text: #181715;/* Roasted espresso on amber fill to avoid white text on amber */
+  --cta-secondary-bg: #FFFFFF;
+  --cta-secondary-text: #181715;
+  --cta-secondary-border: rgba(28, 22, 19, 0.15);
+  --social-btn-bg: #FFFFFF;   /* White/cream surface in light mode */
+  --social-btn-text: #1C1613;
+  --social-btn-border: rgba(28, 22, 19, 0.12);
+  --tag-pill-bg: transparent;
+  --tag-pill-border: rgba(28, 22, 19, 0.13);
+  --tag-pill-text: #1C1613;
+  --nav-bg: rgba(255, 255, 255, 0.92);
+  --nav-border: rgba(28, 22, 19, 0.10);
+  --nav-text: #1C1613;
+  --nav-link-color: rgba(28, 22, 19, 0.72);
+  --nav-link-hover: #1C1613;
+  --nav-link-hover-bg: rgba(28, 22, 19, 0.06);
+  --nav-cta-bg: #181715;
+  --nav-cta-text: #FFFFFF;
+  --nav-logo-bg: rgba(28, 22, 19, 0.06);
+  --nav-logo-text: #1C1613;
+  --nav-logo-border: rgba(28, 22, 19, 0.10);
+
+  /* Emil Kowalski motion curves */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+[data-theme="dark"] {
+  /* Roasted Obsidian & Amber Glow (Dark Mode) */
+  --canvas: #12100E;          /* Roasted espresso obsidian */
+  --surface: #191614;         /* Subtle warm dark surface */
+  --surface-elevated: #231E1B;/* Elevated card background */
+  --foreground: #F4EFEA;      /* Warm cream sand */
+  --muted: #A3978B;           /* Soft toasted oat (6.5:1 contrast) */
+  --accent: #E8953C;          /* Radiant golden-hour amber */
+  --accent-hover: #F4A54F;
+  --accent-glow: rgba(232, 149, 60, 0.22);
+  --earth: #C49261;           /* Luminous camel corduroy */
+  --slate-navy: #252B34;      /* Deep midnight anchor */
+  --espresso: #14110F;
+  --border: rgba(244, 239, 234, 0.08);
+  --border-strong: rgba(244, 239, 234, 0.14);
+  --pill-bg: rgba(25, 22, 20, 0.85);
+  --pill-border: rgba(244, 239, 234, 0.12);
+  --dock-bg: rgba(25, 22, 20, 0.90);
+  --dock-border: rgba(244, 239, 234, 0.14);
+  --grid-line: rgba(244, 239, 234, 0.03);
+  --cta-primary-bg: #E8953C;
+  --cta-primary-text: #12100E;/* Dark roasted obsidian on amber fill */
+  --cta-secondary-bg: #231E1B;
+  --cta-secondary-text: #F4EFEA;
+  --cta-secondary-border: rgba(244, 239, 234, 0.18);
+  --social-btn-bg: #1E1B18;
+  --social-btn-text: #F4EFEA;
+  --social-btn-border: rgba(244, 239, 234, 0.14);
+  --tag-pill-bg: transparent;
+  --tag-pill-border: rgba(244, 239, 234, 0.14);
+  --tag-pill-text: #F4EFEA;
+  --nav-bg: #181715;
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --nav-text: #FFFFFF;
+  --nav-link-color: rgba(255, 255, 255, 0.72);
+  --nav-link-hover: #FFFFFF;
+  --nav-link-hover-bg: rgba(255, 255, 255, 0.09);
+  --nav-cta-bg: #FFFFFF;
+  --nav-cta-text: #181715;
+  --nav-logo-bg: rgba(255, 255, 255, 0.08);
+  --nav-logo-text: #FFFFFF;
+  --nav-logo-border: rgba(255, 255, 255, 0.12);
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-glow: var(--accent-glow);
+  --color-earth: var(--earth);
+  --color-slate-navy: var(--slate-navy);
+  --color-espresso: var(--espresso);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-pill-bg: var(--pill-bg);
+  --color-pill-border: var(--pill-border);
+  --font-serif: var(--font-instrument-serif), serif;
+  --font-display: var(--font-instrument-serif), serif;
+  --font-sans: var(--font-dm-sans), sans-serif;
+  --font-body: var(--font-dm-sans), sans-serif;
+  --font-mono: var(--font-dm-mono), monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Typography Definitions: NO OTHER FONTS ALLOWED ───────────────────────── */
+:root {
+  --font-serif: var(--font-instrument-serif);
+  --font-display: var(--font-instrument-serif);
+  --font-sans: var(--font-dm-sans);
+  --font-body: var(--font-dm-sans);
+  --font-mono: var(--font-dm-mono);
+}
+
+.font-serif,
+.font-display {
+  font-family: var(--font-instrument-serif), serif;
+}
+
+.font-sans,
+.font-body {
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-dm-mono), monospace;
+}
+
+/* Browser Surfaces (Craft Floor Rule 15) */
+::selection {
+  background-color: var(--accent);
+  color: #FFFFFF;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--canvas);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus Ring Utility (A11y & Craft Floor) */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Smooth theme transition on theme-reactive elements */
+.theme-transition {
+  transition: background-color 280ms var(--ease-out),
+              color 280ms var(--ease-out),
+              border-color 280ms var(--ease-out),
+              box-shadow 280ms var(--ease-out);
+}
+
+/* Emil Kowalski Pressable Feedback */
+.pressable {
+  transition: transform 160ms var(--ease-out), filter 160ms var(--ease-out);
+}
+.pressable:active {
+  transform: scale(0.97);
+}
+
+/* Social button hover gated behind pointer:fine to prevent mobile sticky hover */
+.social-btn {
+  transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .social-btn:hover {
+    transform: scale(1.1);
+  }
+}
+.social-btn:active {
+  transform: scale(0.95);
+}
+
+/* Navbar link hover — gates hover behind pointer:fine to avoid sticky touch states */
+.nav-link {
+  color: var(--nav-link-color);
+  border-radius: 9999px;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 140ms var(--ease-out), background-color 140ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav-link:hover {
+    color: var(--nav-link-hover);
+    background-color: var(--nav-link-hover-bg);
+  }
+}
+.nav-link-active {
+  color: var(--accent) !important;
+}
+
+/* Circular badge slow spin */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 14s linear infinite;
+}
+
+/* Intentional reduced motion alternative (Audit dimension 1 - no destructive 0.01ms blanket kill) */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow {
+    animation: none !important;
+  }
+  .pressable,
+  .social-btn {
+    transform: none !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
 }
