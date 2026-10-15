@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans, DM_Mono } from "next/font/google";
-import { site } from "@/lib/content";
+import { SmoothScroll } from "@/components/smooth-scroll";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -22,8 +23,9 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: site.title,
-  description: site.description,
+  title: "Anas Alam — Full-Stack Developer",
+  description:
+    "First-year BCA student and full-stack developer building AI-powered web apps with Next.js, TypeScript, and PostgreSQL. Open to remote internships.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -32,7 +34,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${instrumentSerif.variable} ${dmSans.variable} ${dmMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <SmoothScroll>
+          {children}
+          <Footer />
+        </SmoothScroll>
+      </body>
     </html>
   );
 }

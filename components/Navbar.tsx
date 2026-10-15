@@ -1,13 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { ui, links, person } from "@/lib/content";
+import { useLenis } from "@/components/smooth-scroll";
 
 const NAV_LINKS = [
   { label: "Home", href: "#" },
-  { label: ui.nav.work, href: "#work" },
-  { label: ui.nav.about, href: "#about" },
-  { label: ui.nav.contact, href: links.email },
+  { label: "About", href: "#about" },
+  { label: "Work", href: "#projects" },
+  { label: "Art", href: "#art" },
+  { label: "Contact", href: "mailto:anasalam.xyz@gmail.com" },
 ] as const;
 
 export interface NavbarProps {
@@ -34,10 +35,20 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
     width: 0,
     opacity: 0,
   });
-  const [prefersReduced, setPrefersReduced] = React.useState(false);
+  const prefersReduced = React.useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => {};
+      const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+      media.addEventListener("change", onStoreChange);
+      return () => media.removeEventListener("change", onStoreChange);
+    },
+    () => (typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false),
+    () => false
+  );
 
   const navUlRef = React.useRef<HTMLUListElement>(null);
   const linkRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
+  const lenis = useLenis();
 
   const isLight = heroTheme === "light";
 
@@ -78,15 +89,6 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
         };
   }, [isLight, scrolled]);
 
-  // Reduced motion preference check
-  React.useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReduced(media.matches);
-    const handler = () => setPrefersReduced(media.matches);
-    media.addEventListener("change", handler);
-    return () => media.removeEventListener("change", handler);
-  }, []);
-
   // Recalculate sliding underline geometry
   const updateIndicator = React.useCallback(() => {
     const activeIndex = NAV_LINKS.findIndex((link) => link.href === activeHref);
@@ -118,14 +120,14 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
     const onScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      const workEl = document.getElementById("work");
+      const projectsEl = document.getElementById("projects");
       const aboutEl = document.getElementById("about");
       const scrollPos = window.scrollY + 140;
 
       if (aboutEl && scrollPos >= aboutEl.offsetTop) {
         setActiveHref("#about");
-      } else if (workEl && scrollPos >= workEl.offsetTop) {
-        setActiveHref("#work");
+      } else if (projectsEl && scrollPos >= projectsEl.offsetTop) {
+        setActiveHref("#projects");
       } else {
         setActiveHref("#");
       }
@@ -153,28 +155,21 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
         <a
           href="#"
           className="pressable focus-ring flex min-h-[44px] shrink-0 items-center gap-2.5 rounded-full"
-          aria-label={`${person.name} — home`}
-          onClick={() => setActiveHref("#")}
+          aria-label="Anas Alam — home"
+          onClick={(e) => {
+            setActiveHref("#");
+            if (lenis) {
+              e.preventDefault();
+              lenis.scrollTo(0);
+            }
+          }}
         >
-          {/* Neutral Logo Tile */}
-          <div
-            className="theme-transition flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-black shadow-inner"
-            style={{
-              background: themeStyles.logoBg,
-              color: themeStyles.logoText,
-              border: `1px solid ${themeStyles.logoBorder}`,
-            }}
-            aria-hidden="true"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z" />
-            </svg>
-          </div>
+
           <span
             className="theme-transition font-bold tracking-tight"
             style={{ fontSize: "1.05rem", color: themeStyles.textPrimary }}
           >
-            {ui.nav.logoName || "Anas."}
+            {"<Anas/>"}
           </span>
         </a>
 
@@ -209,8 +204,16 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
                       e.currentTarget.style.backgroundColor = "transparent";
                     }
                   }}
-                  onClick={() => {
+                  onClick={(e) => {
                     setActiveHref(href);
+                    if (lenis && href.startsWith("#")) {
+                      e.preventDefault();
+                      if (href === "#") {
+                        lenis.scrollTo(0);
+                      } else {
+                        lenis.scrollTo(href);
+                      }
+                    }
                   }}
                 >
                   {label}
@@ -278,15 +281,20 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
 
           {/* Adaptive CTA button */}
           <a
-            href={links.email}
-            className="pressable focus-ring theme-transition shrink-0 rounded-full px-5 py-2 text-xs font-semibold shadow-xs"
+            href="mailto:anasalam.xyz@gmail.com"
+            className="inline-flex items-center justify-center group pressable focus-ring theme-transition shrink-0 rounded-full px-5 py-2 text-xs font-semibold shadow-xs"
             style={{
               background: themeStyles.ctaBg,
               color: themeStyles.ctaText,
             }}
             aria-label="Send an email to Anas Alam"
           >
-            {ui.nav.letsTalk}
+            <span>Say Hi!</span>
+            <svg className="opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 ml-1" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+
           </a>
         </div>
       </nav>

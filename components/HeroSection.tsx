@@ -4,18 +4,39 @@ import * as React from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { person, images, links, ui, additions, achievements, projects } from "@/lib/content";
+import { useGSAP } from "@gsap/react";
+import { useBentoScatter } from "@/hooks/use-bento-scatter";
+import { TagPill } from "@/components/TagPill";
+// Register plugins once at module level per GSAP best practices
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// ─── Content Helpers ──────────────────────────────────────────────────────────
+// ─── Multiple-Entry Data Definitions ─────────────────────────────────────────
+const SKILL_TAG_ROWS = [
+  ["Next.js", "React"],
+  ["Node.js", "Tailwind CSS"],
+  ["TypeScript", "PostgreSQL"],
+] as const;
 
-function addition(id: string): string {
-  return (additions as ReadonlyArray<{ id: string; text: string }>).find(
-    (a) => a.id === id
-  )?.text ?? "";
-}
-
-const firstAchievement = achievements[0]; // Code Jam 2026
-const featuredProject = projects.find((p) => p.featured) ?? projects[0];
+const SOCIAL_LINKS = [
+  {
+    name: "GitHub",
+    href: "https://github.com/anasalam-xyz",
+    label: "GitHub profile",
+    isExternal: true,
+  },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/anasalam-xyz",
+    label: "LinkedIn profile",
+    isExternal: true,
+  },
+  {
+    name: "Email",
+    href: "mailto:anasalam.xyz@gmail.com",
+    label: "Email Anas Alam",
+    isExternal: false,
+  },
+] as const;
 
 // ─── SVG Icons ───────────────────────────────────────────────────────────────
 
@@ -44,38 +65,47 @@ function MailIcon() {
   );
 }
 
-function GlobeIcon() {
+function ArrowRightIcon({ className = "" }: { className?: string }) {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-      <path d="M2 12h20" />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
     </svg>
   );
 }
 
-// ─── Social Circle Button ────────────────────────────────────────────────────
+function ArrowUpRightIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M7 17L17 7" />
+      <path d="M7 7h10v10" />
+    </svg>
+  );
+}
+
+// ─── Sub-Components ──────────────────────────────────────────────────────────
+
 function SocialButton({
   href,
   label,
   children,
+  isExternal = true,
 }: {
   href: string;
   label: string;
   children: React.ReactNode;
+  isExternal?: boolean;
 }) {
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       aria-label={label}
-      className="social-btn focus-ring theme-transition relative inline-flex h-9 w-9 items-center justify-center rounded-full after:absolute after:-inset-1.5 after:content-['']"
+      className="social-btn focus-ring theme-transition relative inline-flex h-9 w-9 items-center justify-center rounded-full shadow-xs"
       style={{
         background: "var(--social-btn-bg)",
         color: "var(--social-btn-text)",
         border: "1px solid var(--social-btn-border)",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
       }}
     >
       {children}
@@ -83,148 +113,112 @@ function SocialButton({
   );
 }
 
+
 // ─── Component Props ─────────────────────────────────────────────────────────
 
 export interface HeroSectionProps {
   theme?: "light" | "dark";
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// ─── Hero Section Component ──────────────────────────────────────────────────
 
 export function HeroSection({ theme = "light" }: HeroSectionProps) {
   const sectionRef = React.useRef<HTMLElement>(null);
+  const headingAreaRef = React.useRef<HTMLDivElement>(null);
+  const photoWrapperRef = React.useRef<HTMLDivElement>(null);
+  const photoInnerRef = React.useRef<HTMLDivElement>(null);
   const leftGroupRef = React.useRef<HTMLDivElement>(null);
   const rightGroupRef = React.useRef<HTMLDivElement>(null);
   const stampBadgeRef = React.useRef<HTMLDivElement>(null);
-  const headingAreaRef = React.useRef<HTMLDivElement>(null);
-  const photoRef = React.useRef<HTMLDivElement>(null);
   const ctaDockRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
 
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    const ctx = gsap.context(() => {
-      // ── Initial entrance animation ───────────────────────────────────────
-      if (!prefersReduced) {
-        // Heading block fades in
+      // ── Entrance Animations (Respects prefers-reduced-motion) ───────────────
+      // Uses autoAlpha and xPercent/yPercent so properties NEVER collide with scroll tweens
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.from(headingAreaRef.current, {
-          opacity: 0,
-          y: 20,
+          autoAlpha: 0,
+          yPercent: 18,
           duration: 0.8,
           ease: "power3.out",
           delay: 0.1,
         });
 
-        // Photo rises gracefully from bottom
-        gsap.from(photoRef.current, {
-          opacity: 0,
-          y: 40,
+        // Photo inner rises gracefully (outer wrapper handles layout centering)
+        gsap.from(photoInnerRef.current, {
+          autoAlpha: 0,
+          yPercent: 12,
           duration: 1.0,
           ease: "power3.out",
           delay: 0.25,
         });
 
-        // Left floating elements slide in
+        // Left floating group slides in via xPercent
         gsap.from(leftGroupRef.current, {
-          opacity: 0,
-          x: -60,
+          autoAlpha: 0,
+          xPercent: -30,
           duration: 0.8,
           ease: "power3.out",
           delay: 0.45,
         });
 
-        // Right floating elements slide in
+        // Right floating group slides in via xPercent
         gsap.from(rightGroupRef.current, {
-          opacity: 0,
-          x: 60,
+          autoAlpha: 0,
+          xPercent: 30,
           duration: 0.8,
           ease: "power3.out",
           delay: 0.5,
         });
 
-        // Stamp badge pops in with a slight spring
+        // Stamp badge pops in via scale
         gsap.from(stampBadgeRef.current, {
-          opacity: 0,
+          autoAlpha: 0,
           scale: 0.75,
           duration: 0.7,
           ease: "back.out(1.6)",
           delay: 0.55,
         });
 
-        // CTA dock floats up
+        // CTA dock floats up via yPercent
         gsap.from(ctaDockRef.current, {
-          opacity: 0,
-          y: 20,
+          autoAlpha: 0,
+          yPercent: 25,
           duration: 0.7,
           ease: "power3.out",
           delay: 0.6,
         });
-      }
+      });
+    },
+    { scope: sectionRef }
+  );
 
-      // ── Scroll Animation: Elements slide outwards on scroll down ──────────
-      // Reverses automatically on scroll up via scrub — stays 100% visible!
-      if (!prefersReduced) {
-        const scrollCfg = {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "+=650",
-          scrub: 1.2,
-        };
-
-        // Left group slides OUT to the LEFT (stays fully visible)
-        gsap.to(leftGroupRef.current, {
-          x: -180,
-          ease: "power1.out",
-          scrollTrigger: scrollCfg,
-        });
-
-        // Right group slides OUT to the RIGHT (stays fully visible)
-        gsap.to(rightGroupRef.current, {
-          x: 180,
-          ease: "power1.out",
-          scrollTrigger: scrollCfg,
-        });
-
-        // Stamp badge slides OUT to the RIGHT & UP (stays fully visible)
-        gsap.to(stampBadgeRef.current, {
-          x: 0,
-          y: -30,
-          ease: "power1.out",
-          scrollTrigger: scrollCfg,
-        });
-
-        // Cutout stays grounded with subtle parallax (no opacity drop)
-        gsap.to(photoRef.current, {
-          y: 0,
-          scale: 1.5,
-          ease: "power1.out",
-          scrollTrigger: scrollCfg,
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  // Apply disperse-only scatter parallax to floating elements and photo
+  useBentoScatter(sectionRef, {
+    gather: false,
+    disperse: true,
+    spread: 0.6,
+  });
 
   return (
     <section
       ref={sectionRef}
+      data-grid="hero"
       data-theme={theme}
-      aria-label={`Hero — ${person.name} portfolio introduction`}
+      aria-label="Anas Alam — portfolio introduction"
       className="theme-transition relative h-[100svh] min-h-[680px] w-full overflow-hidden"
       style={{
         background: "var(--canvas)",
         color: "var(--foreground)",
       }}
     >
-      {/* ── Subtle Background Grid Lines matching reference ───────────────── */}
+      {/* ── Background Layer 1: Subtle Grid Lines ─────────────────────────── */}
       <div
         aria-hidden="true"
-        className="theme-transition pointer-events-none absolute inset-0 opacity-[0.04]"
+        className="theme-transition pointer-events-none absolute inset-0 opacity-[0.035]"
         style={{
           backgroundImage:
             "linear-gradient(to right, var(--foreground) 1px, transparent 1px), linear-gradient(to bottom, var(--foreground) 1px, transparent 1px)",
@@ -232,190 +226,188 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
         }}
       />
 
-      {/* ── Soft Warm Glow behind subject ─────────────────────────────────── */}
+      {/* ── Background Layer 2: Soft Warm Radial Glow behind subject ───────── */}
       <div
         aria-hidden="true"
-        className="theme-transition pointer-events-none absolute left-1/2 top-[42%] h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl opacity-40"
+        className="theme-transition pointer-events-none absolute left-1/2 top-[44%] h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl opacity-35"
         style={{
           background: "radial-gradient(circle, var(--accent) 0%, transparent 70%)",
         }}
       />
 
-      {/* ── Circular Watermark Motif behind cutout ────────────────────────── */}
+      {/* ── Subtle Monumental Display Name in Instrument Serif (z-10) ──────── */}
       <div
         aria-hidden="true"
-        className="theme-transition pointer-events-none absolute bottom-0 left-1/2 h-[580px] w-[580px] -translate-x-1/2 rounded-full border opacity-50"
+        className="pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2 select-none whitespace-nowrap text-center font-serif leading-none tracking-tight opacity-[0.05] md:bottom-12 md:opacity-[0.06]"
         style={{
-          borderColor: "var(--border)",
-          background: "radial-gradient(circle, var(--accent-glow) 0%, transparent 75%)",
-        }}
-      />
-
-      {/* ── Monumental Display Name in Instrument Serif behind cutout (z-10) ─ */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2 select-none whitespace-nowrap text-center font-serif leading-none tracking-tight opacity-[0.06] md:bottom-14 md:opacity-[0.07]"
-        style={{
-          fontSize: "clamp(5rem, 17vw, 15rem)",
+          fontSize: "clamp(5rem, 16vw, 14rem)",
           color: "var(--foreground)",
         }}
       >
-        {person.name.toUpperCase()}
+        ANAS ALAM
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           TOP CENTERED HEADLINE HIERARCHY — z-30
-          Status Pill → "I'm Anas Alam" (italic serif accent) → Subtitle
+          Avoids collision with photo head by controlled padding & font scaling
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
         ref={headingAreaRef}
-        className="absolute inset-x-0 top-0 z-30 flex flex-col items-center px-4 pt-20 md:pt-24"
+        className="absolute inset-x-0 top-16 md:top-0 z-30 flex flex-col items-center px-4 pt-18 md:pt-22"
       >
-
         {/* H1 Headline — DM Sans + Instrument Serif italic emphasis */}
         <h1
-          className="flex mt-12 items-center justify-center text-center font-bold tracking-tight leading-none"
-          style={{ fontSize: "clamp(2.75rem, 6.8vw, 5.25rem)" }}
+          className="flex mt-8 md:mt-10 items-center justify-center text-center font-bold tracking-tight leading-none"
+          style={{ fontSize: "clamp(2.5rem, 6.2vw, 4.85rem)" }}
         >
           <span className="font-sans" style={{ color: "var(--foreground)" }}>
-            I&apos;m&nbsp;Anas&nbsp;
+            I&apos;m&nbsp;Anas Alam
           </span>
-          <span
-            className="font-serif italic font-normal tracking-normal"
-            style={{ color: "var(--accent)" }}
-          >
-            Alam
-          </span>
+          
         </h1>
 
-        {/* Subtitle (DM Sans) */}
+        {/* Subtitle in DM Sans (Font size >= 12px) */}
         <p
-          className="theme-transition font-sans mt-3 text-center font-medium"
-          style={{
-            fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)",
-            color: "var(--muted)",
-          }}
+          className="theme-transition font-sans mt-3 text-center text-sm md:text-base font-medium"
+          style={{ color: "var(--muted)" }}
         >
-          {addition("hero-subtitle") || "Full-Stack Developer based in Ranchi, India"}
+          Full-Stack Developer based in Ranchi, India
         </p>
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           CENTER CUTOUT PHOTO — z-20, bottom-anchored
-          Enlarged by ~50% to dominate the hero stage, matching the reference photo scale.
+          Outer div handles layout centering without GSAP interference.
+          Inner div handles GSAP scroll scale and entrance motion.
+          Capped height ensures photo never upscales past native resolution.
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
-        ref={photoRef}
-        className="pointer-events-none absolute bottom-0 left-1/2 z-20 h-[68svh] sm:h-[75svh] md:h-[86svh] lg:h-[92svh] -translate-x-1/2 will-change-transform max-h-[1050px]"
+        ref={photoWrapperRef}
+        className="pointer-events-none absolute bottom-0 left-1/2 z-20 h-[68svh] sm:h-[76svh] lg:h-[90svh] -translate-x-1/2 max-h-[1050px]"
         style={{
-          aspectRatio: `${images.profile.width} / ${images.profile.height}`,
+          aspectRatio: "1024 / 1536",
         }}
       >
-        <Image
-          src={images.profile.src}
-          alt={images.profile.alt}
-          width={images.profile.width}
-          height={images.profile.height}
-          priority
-          quality={95}
-          className="h-full w-full object-contain object-bottom"
-          sizes="(max-width: 768px) 90vw, (max-width: 1200px) 60vw, 52vw"
-        />
+        <div
+          ref={photoInnerRef}
+          data-tile
+          data-depth="1.3"
+          data-scatter-x="0"
+          className="relative h-full w-full will-change-transform"
+        >
+          <Image
+            src="/images/profile.png"
+            alt="Portrait of Anas Alam"
+            width={1024}
+            height={1536}
+            priority
+            quality={95}
+            className="h-full w-full object-contain object-bottom"
+            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 58vw, 48vw"
+          />
+        </div>
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          LEFT FLOATING GROUP — z-30, desktop only
-          "Follow Me On" + 4 Dark Social Buttons + Social Proof / Stat Card
-          Slides OUT to the left on scroll down!
+          LEFT FLOATING GROUP — z-30, desktop only (lg:block, hidden below 1024px)
+          "Find Me On" + 3 Social Buttons (no self globe) + NeetCode 150 Stat Card
+          No backdrop-blur to ensure 60fps compositor scroll performance
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
         ref={leftGroupRef}
-        className="absolute z-30 hidden will-change-transform md:block"
+        data-tile
+        data-depth="1.1"
+        className="absolute z-30 hidden will-change-transform lg:block"
         style={{
           left: "clamp(2rem, 6vw, 6.5rem)",
           top: "46%",
         }}
       >
-        {/* "Follow Me On" label in DM Mono */}
+        {/* "Find Me On" label in DM Mono (text-xs >= 12px) */}
         <p
-          className="theme-transition font-mono text-[11px] font-medium uppercase tracking-wider"
+          className="theme-transition font-mono text-xs font-medium uppercase tracking-wider"
           style={{ color: "var(--muted)" }}
         >
-          {ui.hero.findMeOn || "Follow Me On"}
+          Find Me On
         </p>
 
-        {/* Circular dark buttons row */}
-        <div className="mt-2.5 flex items-center gap-2">
-          <SocialButton href={links.github} label="GitHub profile">
-            <GitHubIcon />
-          </SocialButton>
-          <SocialButton href={links.linkedin} label="LinkedIn profile">
-            <LinkedInIcon />
-          </SocialButton>
-          <SocialButton href={links.email} label="Email Anas Alam">
-            <MailIcon />
-          </SocialButton>
-          <SocialButton href={links.portfolio} label="Portfolio link">
-            <GlobeIcon />
-          </SocialButton>
+        {/* Circular social buttons row (Email has no target="_blank") */}
+        <div className="mt-2.5 flex items-left gap-2">
+          {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
+            <SocialButton
+              key={name}
+              href={href}
+              label={label}
+              isExternal={isExternal}
+            >
+              {name === "GitHub" && <GitHubIcon />}
+              {name === "LinkedIn" && <LinkedInIcon />}
+              {name === "Email" && <MailIcon />}
+            </SocialButton>
+          ))}
         </div>
 
-        {/* Social Proof / Review-style Stat Card matching reference */}
+        {/*
         <div
-          className="theme-transition mt-6 rounded-2xl border p-3.5 backdrop-blur-md shadow-xs max-w-[210px]"
+          className="theme-transition mt-6 rounded-2xl border p-4 shadow-xs max-w-[220px]"
           style={{
             background: "var(--pill-bg)",
             borderColor: "var(--pill-border)",
           }}
         >
-          {/* Overlapping avatar circles in DM Mono (shrink-0 + isolate prevents clipping) */}
-          <div className="flex items-center -space-x-2 font-mono isolate py-0.5 pl-0.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full ring-2 ring-[var(--pill-bg)] bg-stone-200 text-stone-800 dark:bg-stone-800 dark:text-stone-200 text-[10px] font-bold shadow-2xs">
-              TS
-            </div>
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full ring-2 ring-[var(--pill-bg)] bg-stone-300 text-stone-900 dark:bg-stone-700 dark:text-stone-100 text-[10px] font-bold shadow-2xs">
-              N15
-            </div>
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full ring-2 ring-[var(--pill-bg)] bg-stone-400 text-stone-950 dark:bg-stone-600 dark:text-stone-100 text-[10px] font-bold shadow-2xs">
-              R1
-            </div>
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full ring-2 ring-[var(--pill-bg)] bg-stone-500 text-white dark:bg-stone-500 dark:text-white text-[10px] font-bold shadow-2xs">
-              CJ
-            </div>
+          <p
+            className="theme-transition font-mono text-xs font-semibold leading-tight"
+            style={{ color: "var(--foreground)" }}
+          >
+            {dsaAchievement.title}
+          </p>
+          <p
+            className="theme-transition font-mono mt-1 text-xs font-normal leading-snug"
+            style={{ color: "var(--muted)" }}
+          >
+            {dsaAchievement.summary}
+          </p>
+
+          <div
+            className="mt-3 pt-2.5 border-t"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <p
+              className="theme-transition font-mono text-xs font-medium leading-tight"
+              style={{ color: "var(--foreground)" }}
+            >
+              {contestAchievement.title}
+            </p>
+            <p
+              className="theme-transition font-mono mt-0.5 text-xs font-normal leading-snug"
+              style={{ color: "var(--muted)" }}
+            >
+              {contestAchievement.summary}
+            </p>
           </div>
-
-          {/* Rating / metric headline in DM Mono (neutral bold, no orange) */}
-          <p className="theme-transition font-mono mt-2.5 text-xs font-semibold leading-tight" style={{ color: "var(--foreground)" }}>
-            150+ DSA Solved <span style={{ color: "var(--muted)" }}>(NeetCode)</span>
-          </p>
-
-          <p className="theme-transition font-mono mt-0.5 text-[11px] font-normal leading-tight" style={{ color: "var(--muted)" }}>
-            Rank 1 Across All Rounds · Code Jam
-          </p>
-        </div>
-      </div>
+        </div>**/}
+      </div> 
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          TOP-RIGHT ROTATING CIRCULAR STAMP BADGE — z-30, desktop only
-          "OPEN TO WORK ★ HIRE ME ★" circular text with orange center arrow
-          Slides OUT to the right & up on scroll down!
+          TOP-RIGHT ROTATING CIRCULAR STAMP BADGE — z-30 (lg:block, hidden below 1024px)
+          Text derived from person.lookingFor, textLength fills perimeter without gaps
+          CSS spin respects motion-reduce:animate-none
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div
+      {/* <div
         ref={stampBadgeRef}
-        className="absolute z-30 hidden will-change-transform md:block"
+        className="absolute z-30 hidden will-change-transform lg:block"
         style={{
           top: "16%",
           right: "clamp(2rem, 7vw, 7rem)",
         }}
       >
         <a
-          href={links.email}
+          href="mailto:anasalam.xyz@gmail.com"
           aria-label="Open to work — contact Anas Alam"
-          className="group focus-ring relative block h-[96px] w-[96px] rounded-full transition-transform hover:scale-105 active:scale-95"
+          className="group focus-ring relative block h-[100px] w-[100px] rounded-full transition-transform hover:scale-105 active:scale-95"
         >
-          {/* Rotating Text Ring SVG */}
           <svg
-            className="animate-spin-slow absolute inset-0 h-full w-full"
+            className="animate-spin-slow motion-reduce:animate-none absolute inset-0 h-full w-full"
             viewBox="0 0 100 100"
             aria-hidden="true"
           >
@@ -427,20 +419,22 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
               />
             </defs>
             <text
-              fontSize="8.5"
-              fontWeight="500"
-              letterSpacing="2.8"
+              fontSize="7.8"
+              fontWeight="600"
               fill="currentColor"
               className="theme-transition font-mono"
               style={{ color: "var(--foreground)" }}
             >
-              <textPath href="#stampTextPath">
-                ★ OPEN TO WORK ★ HIRE ME
+              <textPath
+                href="#stampTextPath"
+                textLength="226"
+                lengthAdjust="spacing"
+              >
+                OPEN TO REMOTE INTERNSHIPS • AVAILABLE NOW • 
               </textPath>
             </text>
           </svg>
 
-          {/* Center Neutral Button with Right Arrow (no orange fill) */}
           <div
             className="theme-transition absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-md transition-transform group-hover:rotate-45"
             style={{
@@ -449,156 +443,92 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
               border: "1px solid var(--border)",
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
+            <ArrowRightIcon />
           </div>
         </a>
-      </div>
+      </div> */}
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          RIGHT FLOATING GROUP — z-30, desktop only
-          Quote Mark + Tagline + Single Neutral Outlined Skill Cloud
-          Slides OUT to the right on scroll down!
+          RIGHT FLOATING GROUP — z-30, desktop only (lg:block, hidden below 1024px)
+          Tagline (no quote mark, no "obsessive craft") + Outlined Skill Cloud
+          No backdrop-blur on moving elements for smooth 60fps scrolling
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
         ref={rightGroupRef}
-        className="absolute z-30 hidden will-change-transform md:block"
+        data-tile
+        data-depth="0.9"
+        className="absolute z-30 hidden will-change-transform lg:block"
         style={{
           right: "clamp(2rem, 6vw, 6.5rem)",
-          top: "38%",
+          top: "40%",
         }}
       >
-        {/* Quote Block (Neutralized quote mark + DM Sans tagline) */}
-        <div className="max-w-[230px] text-right">
-          <span
-            className="block font-serif text-5xl font-normal leading-none select-none opacity-60"
-            style={{ color: "var(--muted)" }}
-            aria-hidden="true"
-          >
-            “
-          </span>
+        {/* Tagline Block (clean DM Sans typography, no testimonial quote mark) */}
+        <div className="max-w-[240px] text-right">
           <p
-            className="theme-transition font-sans mt-0.5 text-[13px] font-normal leading-snug"
+            className="theme-transition font-sans text-xs md:text-sm font-normal leading-relaxed"
             style={{ color: "var(--foreground)" }}
           >
-            {addition("hero-tagline") || "Building AI-powered web applications with obsessive craft!"}
+            Building AI-powered web applications with Next.js, TypeScript, and PostgreSQL.
           </p>
         </div>
 
-        {/* Skill Tag Cloud: single neutral outlined style, no fills, sparkle chip removed */}
+        {/* Skill Tag Cloud: Outlined neutral pills derived from mainStack and skills */}
         <div className="mt-5 flex flex-col items-end gap-2">
-          {/* Row 1: [Full-Stack] [Next.js 15] */}
-          <div className="flex items-center gap-1.5 font-mono">
-            <span
-              className="theme-transition rounded-full px-3.5 py-1 text-xs font-medium backdrop-blur-sm shadow-2xs"
-              style={{
-                background: "var(--tag-pill-bg)",
-                color: "var(--tag-pill-text)",
-                border: "1px solid var(--tag-pill-border)",
-              }}
-            >
-              Full-Stack
-            </span>
-            <span
-              className="theme-transition rounded-full px-3.5 py-1 text-xs font-medium backdrop-blur-sm shadow-2xs"
-              style={{
-                background: "var(--tag-pill-bg)",
-                color: "var(--tag-pill-text)",
-                border: "1px solid var(--tag-pill-border)",
-              }}
-            >
-              Next.js 15
-            </span>
-          </div>
-
-          {/* Row 2: [AI Web Applications] (sparkle chip removed) */}
-          <div className="flex items-center gap-1.5 font-mono">
-            <span
-              className="theme-transition rounded-full px-4 py-1 text-xs font-medium backdrop-blur-sm shadow-2xs"
-              style={{
-                background: "var(--tag-pill-bg)",
-                color: "var(--tag-pill-text)",
-                border: "1px solid var(--tag-pill-border)",
-              }}
-            >
-              AI Web Applications
-            </span>
-          </div>
-
-          {/* Row 3: [TypeScript] [PostgreSQL] */}
-          <div className="flex items-center gap-1.5 font-mono">
-            <span
-              className="theme-transition rounded-full px-3.5 py-1 text-xs font-medium backdrop-blur-sm shadow-2xs"
-              style={{
-                background: "var(--tag-pill-bg)",
-                color: "var(--tag-pill-text)",
-                border: "1px solid var(--tag-pill-border)",
-              }}
-            >
-              TypeScript
-            </span>
-            <span
-              className="theme-transition rounded-full px-3.5 py-1 text-xs font-medium backdrop-blur-sm shadow-2xs"
-              style={{
-                background: "var(--tag-pill-bg)",
-                color: "var(--tag-pill-text)",
-                border: "1px solid var(--tag-pill-border)",
-              }}
-            >
-              PostgreSQL
-            </span>
-          </div>
+          {SKILL_TAG_ROWS.map((row, rowIndex) => (
+            <div key={rowIndex} className="flex items-center gap-1.5 font-mono">
+              {row.map((tag) => (
+                <TagPill key={tag} label={tag} />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           BOTTOM CENTER DUAL-CTA DOCK — z-40
-          Amber "View work" (dark text, no white on amber) + Neutral "Hire Me"
+          Primary: View Projects -> #projects
+          Secondary: Download Resume -> /Anas_Alam_Resume.pdf
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
         ref={ctaDockRef}
         className="absolute bottom-6 left-0 right-0 z-40 flex items-center justify-center px-4 md:bottom-8"
       >
         <div
-          className="theme-transition inline-flex items-center gap-1 rounded-full p-1.5 shadow-xl backdrop-blur-md"
+          className="theme-transition inline-flex items-center gap-1 rounded-full p-1.5 shadow-xl"
           style={{
             background: "var(--dock-bg)",
             border: "1px solid var(--dock-border)",
           }}
         >
-          {/* Left Orange Pill: Portfolio / View Work (dark text avoiding white on amber) */}
+          {/* Primary Action: View Projects */}
           <a
-            href="#work"
-            className="pressable focus-ring font-sans inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-sm transition-opacity hover:opacity-95 md:px-7 md:py-3 md:text-sm"
+            href="#projects"
+            className="group pressable focus-ring font-sans inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-sm transition-opacity hover:opacity-95 md:px-7 md:py-3 md:text-sm"
             style={{
               background: "var(--cta-primary-bg)",
               color: "var(--cta-primary-text)",
             }}
           >
-            <span>{ui.hero.viewWorkLabel || "Portfolio"}</span>
+            <span>View Projects</span>
             <span
-              className="flex h-5 w-5 items-center justify-center rounded-full"
+              className="group-hover:translate-x-1 transition-translate duration-200 flex h-5 w-5 items-center justify-center rounded-full"
               style={{
                 background: "rgba(0,0,0,0.12)",
                 color: "var(--cta-primary-text)",
               }}
               aria-hidden="true"
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
+              <ArrowRightIcon className="oh-3 w-3" />
             </span>
           </a>
 
-          {/* Right Secondary Pill: Hire Me / Résumé */}
+          {/* Secondary Action: Download Resume */}
           <a
-            href={links.resume}
+            href="/Anas_Alam_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={ui.hero.resumeAriaLabel}
+            aria-label="Download Anas Alam's résumé (PDF)"
             className="pressable focus-ring theme-transition font-sans inline-flex items-center rounded-full px-6 py-2.5 text-xs font-bold transition-colors md:px-7 md:py-3 md:text-sm"
             style={{
               background: "var(--cta-secondary-bg)",
@@ -606,41 +536,44 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
               border: "1px solid var(--cta-secondary-border)",
             }}
           >
-            {ui.hero.resumeLabel || "Hire Me"}
+            Download Resume
           </a>
         </div>
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          MOBILE FLOATING ROW (below md) — z-30
-          Shows compact socials & neutral featured badge
+          MOBILE FLOATING ROW (below lg: < 1024px) — z-30
+          Shows compact socials & featured project pill without overlapping photo
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div className="absolute bottom-24 left-0 right-0 z-30 flex items-center justify-between px-5 md:hidden">
+      <div className="absolute bottom-24 left-0 right-0 z-30 flex items-center justify-between px-5 lg:hidden">
         <div className="flex gap-2">
-          <SocialButton href={links.github} label="GitHub">
-            <GitHubIcon />
-          </SocialButton>
-          <SocialButton href={links.linkedin} label="LinkedIn">
-            <LinkedInIcon />
-          </SocialButton>
+          {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
+            <SocialButton
+              key={name}
+              href={href}
+              label={label}
+              isExternal={isExternal}
+            >
+              {name === "GitHub" && <GitHubIcon />}
+              {name === "LinkedIn" && <LinkedInIcon />}
+              {name === "Email" && <MailIcon />}
+            </SocialButton>
+          ))}
         </div>
 
         <a
-          href="#work"
-          className="pressable focus-ring theme-transition font-mono inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium backdrop-blur-md"
+          href="#projects"
+          className="pressable focus-ring theme-transition font-mono inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium"
           style={{
-            background: "var(--tag-pill-bg)",
-            borderColor: "var(--tag-pill-border)",
+            background: "var(--pill-bg)",
+            borderColor: "var(--pill-border)",
             color: "var(--tag-pill-text)",
           }}
         >
           <span style={{ color: "var(--muted)" }} aria-hidden="true">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 17L17 7" />
-              <path d="M7 7h10v10" />
-            </svg>
+            <ArrowUpRightIcon />
           </span>
-          {featuredProject?.title || "Featured"}
+          <span>RoundOne</span>
         </a>
       </div>
     </section>
