@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useLenis } from "@/components/smooth-scroll";
+import { useTheme } from "@/hooks/use-theme";
 
 const NAV_LINKS = [
   { label: "Home", href: "#" },
@@ -27,7 +28,11 @@ export interface NavbarProps {
  * - Explicit transitions instead of transition-all (Emil Kowalski)
  * - Safe hover gates for touch devices
  */
-export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) {
+export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
+  const { theme: storeTheme, toggleTheme: storeToggleTheme } = useTheme();
+  const currentTheme = heroTheme ?? storeTheme;
+  const toggleTheme = onToggleHeroTheme ?? storeToggleTheme;
+
   const [scrolled, setScrolled] = React.useState(false);
   const [activeHref, setActiveHref] = React.useState<string>("#");
   const [indicator, setIndicator] = React.useState<{ x: number; width: number; opacity: number }>({
@@ -50,7 +55,7 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
   const linkRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
   const lenis = useLenis();
 
-  const isLight = heroTheme === "light";
+  const isLight = currentTheme === "light";
 
   // Explicit, high-contrast palette calibrated for light and dark modes
   const themeStyles = React.useMemo(() => {
@@ -139,7 +144,7 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
 
   return (
     <header
-      data-theme={heroTheme}
+      data-theme={currentTheme}
       className="fixed left-0 right-0 top-4 z-50 flex justify-center px-4 md:top-5"
     >
       <nav
@@ -243,7 +248,7 @@ export function Navbar({ heroTheme = "light", onToggleHeroTheme }: NavbarProps) 
           {/* Theme switch button with 44x44px accessible touch area */}
           <button
             type="button"
-            onClick={onToggleHeroTheme}
+            onClick={toggleTheme}
             aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
             title={isLight ? "Switch to dark mode" : "Switch to light mode"}
             className="pressable focus-ring theme-transition flex h-11 w-11 items-center justify-center rounded-full opacity-80 hover:opacity-100"

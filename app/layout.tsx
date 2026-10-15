@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans, DM_Mono } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
@@ -32,10 +33,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${instrumentSerif.variable} ${dmSans.variable} ${dmMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <SmoothScroll>
+          <Navbar />
           {children}
           <Footer />
         </SmoothScroll>
