@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { SectionBadge } from "@/components/SectionBadge";
-import { ProjectCard, Project, Projects } from "@/components/ProjectCard";
+import { ProjectCard, Projects } from "@/components/ProjectCard";
 
 export type { ProjectImage, Project, Projects } from "@/components/ProjectCard";
 
@@ -384,8 +384,8 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
                 scrub: true,
                 animation: gsap.fromTo(
                   primaryImg,
-                  { xPercent: 11 },
-                  { xPercent: -11, ease: "none" }
+                  { xPercent: 16.5 },
+                  { xPercent: -16.5, ease: "none" }
                 ),
               })
             );
@@ -402,8 +402,8 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
                 scrub: true,
                 animation: gsap.fromTo(
                   secondaryImg,
-                  { xPercent: 21 },
-                  { xPercent: -21, ease: "none" }
+                  { xPercent: 31.5 },
+                  { xPercent: -31.5, ease: "none" }
                 ),
               })
             );
@@ -453,13 +453,13 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
           <div>
             <h2
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mt-1"
+              className="ml-12 text-3xl sm:text-4xl lg:text-5xl font-medium font-display tracking-tight mt-1"
               style={{ color: "var(--foreground)" }}
             >
-              Featured Projects &amp; Systems
+              Featured Projects
             </h2>
-            <p className="mt-3 text-xs sm:text-sm max-w-xl leading-relaxed" style={{ color: "var(--muted)" }}>
-              Full-stack AI web applications built with Next.js, TypeScript, PostgreSQL, and performant backend architectures.
+            <p className="ml-12 mt-3 text-xs sm:text-sm max-w-xl leading-relaxed" style={{ color: "var(--muted)" }}>
+              Some of my personal projects for you to see.
             </p>
           </div>
 

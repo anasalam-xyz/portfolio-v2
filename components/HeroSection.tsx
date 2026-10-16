@@ -261,7 +261,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           style={{ fontSize: "clamp(2.5rem, 6.2vw, 4.85rem)" }}
         >
           <span className="font-sans" style={{ color: "var(--foreground)" }}>
-            I&apos;m&nbsp;Anas Alam
+            hi, <span className="text-accent">anas</span> here.
           </span>
           
         </h1>
@@ -319,20 +319,20 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
         data-depth="1.1"
         className="absolute z-30 hidden will-change-transform lg:block"
         style={{
-          left: "clamp(2rem, 6vw, 6.5rem)",
-          top: "46%",
+          left: "clamp(2rem, 5vw, 6.5rem)",
+          top: "70%",
         }}
       >
         {/* "Find Me On" label in DM Mono (text-xs >= 12px) */}
         <p
-          className="theme-transition font-mono text-xs font-medium uppercase tracking-wider"
+          className="ml-1 theme-transition font-mono text-xs font-medium uppercase tracking-wider"
           style={{ color: "var(--muted)" }}
         >
           Find Me On
         </p>
 
         {/* Circular social buttons row (Email has no target="_blank") */}
-        <div className="mt-2.5 flex items-left gap-2">
+        <div className=" mt-2.5 flex flex-col items-left gap-2">
           {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
             <SocialButton
               key={name}
@@ -453,7 +453,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           Tagline (no quote mark, no "obsessive craft") + Outlined Skill Cloud
           No backdrop-blur on moving elements for smooth 60fps scrolling
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div
+      {/* <div
         ref={rightGroupRef}
         data-tile
         data-depth="0.9"
@@ -463,7 +463,6 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           top: "40%",
         }}
       >
-        {/* Tagline Block (clean DM Sans typography, no testimonial quote mark) */}
         <div className="max-w-[240px] text-right">
           <p
             className="theme-transition font-sans text-xs md:text-sm font-normal leading-relaxed"
@@ -473,7 +472,6 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           </p>
         </div>
 
-        {/* Skill Tag Cloud: Outlined neutral pills derived from mainStack and skills */}
         <div className="mt-5 flex flex-col items-end gap-2">
           {SKILL_TAG_ROWS.map((row, rowIndex) => (
             <div key={rowIndex} className="flex items-center gap-1.5 font-mono">
@@ -483,7 +481,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           BOTTOM CENTER DUAL-CTA DOCK — z-40

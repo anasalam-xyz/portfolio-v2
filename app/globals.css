@@ -268,4 +268,50 @@ html.lenis body {
   scrollbar-width: none;
 }
 
+/* ─── Skills Section: Row-Gravity Animations & Dual Theme Icons ────────────── */
+.skills-section [data-icon] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-section [data-icon] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ─── Art Section: Initial Clipped State & Reduced Motion Override ─────────── */
+[data-art] {
+  clip-path: inset(0% 0% 100% 0%);
+  will-change: clip-path;
+}
+
+[data-art] [data-art-img] {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-art] {
+    clip-path: inset(0% 0% 0% 0%) !important;
+  }
+  [data-art] [data-art-img] {
+    transform: none !important;
+  }
+  .animate-fade-in-scale {
+    animation: none !important;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
 

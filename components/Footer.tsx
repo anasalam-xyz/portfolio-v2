@@ -139,6 +139,7 @@ export function Footer() {
 
   return (
     <footer
+      id="footer" 
       ref={footerRef}
       aria-label="Site footer and contact"
       className="theme-transition relative w-full pt-16 pb-8 text-[#F4EFEA] overflow-hidden"

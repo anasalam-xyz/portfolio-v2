@@ -142,7 +142,7 @@ export function ProjectCard({ project, priority = false }: ProjectCardProps) {
         >
           <div
             data-parallax="primary"
-            className="relative h-full w-[130%] -left-[15%] will-change-transform"
+            className="relative h-full w-[136%] -left-[18%] will-change-transform"
           >
             <Image
               src={thumbnail.src}
@@ -167,7 +167,7 @@ export function ProjectCard({ project, priority = false }: ProjectCardProps) {
           >
             <div
               data-parallax="secondary"
-              className="relative h-full w-[150%] -left-[25%] will-change-transform"
+              className="relative h-full w-[165%] -left-[32.5%] will-change-transform"
             >
               <Image
                 src={secondaryImage.src}

@@ -58,14 +58,11 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
         {/* Section Header: excluded from scatter parallax (not a data-tile) */}
         <div className="text-center max-w-xl mx-auto mb-12">
           <h2
-            className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+            className="text-3xl sm:text-4xl font-medium font-display tracking-tight"
             style={{ color: "var(--foreground)" }}
           >
             {"</ About Me >"}
           </h2>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed" style={{ color: "var(--muted)" }}>
-            First-year BCA student and full-stack developer bridging engineering rigor with fluid, physical user interfaces.
-          </p>
         </div>
 
         {/* ── Bento Grid: relative reference container for scatter offsets ── */}

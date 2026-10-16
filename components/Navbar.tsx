@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Work", href: "#projects" },
   { label: "Art", href: "#art" },
-  { label: "Contact", href: "mailto:anasalam.xyz@gmail.com" },
+  { label: "Contact", href: "#footer" },
 ] as const;
 
 export interface NavbarProps {
@@ -148,7 +148,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
       className="fixed left-0 right-0 top-4 z-50 flex justify-center px-4 md:top-5"
     >
       <nav
-        className="theme-transition flex w-full max-w-3xl items-center justify-between gap-3 rounded-full px-4 py-2 font-sans backdrop-blur-md md:px-5 md:py-2.5"
+        className="opacity-90 backdrop-blur-xl theme-transition flex w-full max-w-3xl items-center justify-between gap-3 rounded-full px-4 py-2 font-sans backdrop-blur-md md:px-5 md:py-2.5"
         style={{
           background: themeStyles.navBg,
           border: `1px solid ${themeStyles.navBorder}`,
