@@ -23,11 +23,81 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLenis } from "@/components/smooth-scroll";
-import { FOOTER_CONTENT } from "@/lib/content";
 
 // DEV-ONLY: Set to true to test the form error state and mailto fallback in browser.
 // REMOVE OR SET TO FALSE FOR NORMAL/SUCCESS SUBMISSIONS.
 const DEV_FORCE_ERROR = false;
+
+interface FooterNavLink {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface FooterNavColumn {
+  title: string;
+  links?: FooterNavLink[];
+  text?: string[];
+}
+
+interface FooterSocialLink {
+  name: "LinkedIn" | "Twitter/X" | "Instagram";
+  href: string;
+  ariaLabel: string;
+}
+
+const FOOTER_CONTENT = {
+  notchLabel: "Something to Say ?",
+  heading: "Let's build something extraordinary.",
+  subheading:
+    "Have a project in mind, an internship opportunity, or just want to say hi? Send me a message or copy my email directly.",
+  email: "anasalam.xyz@gmail.com",
+  navColumns: [
+    {
+      title: "Navigation",
+      links: [
+        { label: "Home", href: "#" },
+        { label: "About", href: "#about" },
+        { label: "Selected Work", href: "#projects" },
+      ],
+    },
+    {
+      title: "Connect",
+      links: [
+        { label: "GitHub", href: "https://github.com/anasalam-xyz", external: true },
+        { label: "LinkedIn", href: "https://linkedin.com/in/anasalam-xyz", external: true },
+        { label: "Twitter / X", href: "https://x.com/anasalam_xyz", external: true },
+      ],
+    },
+    {
+      title: "Status",
+      text: [
+        "Available for remote internships",
+        "Ranchi, India (UTC+5:30)",
+        "BCA (1st Year) at DSPMU Ranchi",
+      ],
+    },
+  ] as FooterNavColumn[],
+  socials: [
+    {
+      name: "LinkedIn",
+      href: "https://linkedin.com/in/anasalam-xyz",
+      ariaLabel: "Visit Anas Alam's LinkedIn profile",
+    },
+    {
+      name: "Twitter/X",
+      href: "https://x.com/anasalam_xyz",
+      ariaLabel: "Visit Anas Alam's Twitter / X profile",
+    },
+    {
+      name: "Instagram",
+      href: "https://instagram.com/anasalam_xyz",
+      ariaLabel: "Visit Anas Alam's Instagram profile",
+    },
+  ] as FooterSocialLink[],
+  copyright: `© ${new Date().getFullYear()} Anas Alam. All rights reserved.`,
+  backToTopLabel: "Back to top ↑",
+};
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
@@ -220,16 +290,13 @@ export function Footer() {
             1. INFO ROW ON DARK AREA
             Tagline/Logo on left + 2-3 Columns of Navigation on right
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <div className="pt-8 pb-14 border-b border-[rgba(244,239,234,0.1)]">
+        <div className="pt-8 pb-14 border-b-2 border-[rgba(244,239,234,0.1)]">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
             {/* Left Column: Brand & Tagline */}
             <div className="max-w-sm">
               <span className="font-serif text-2xl sm:text-3xl font-normal tracking-tight text-[#F4EFEA]">
                 Anas Alam
               </span>
-              <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-[#A3978B]">
-                {FOOTER_CONTENT.tagline}
-              </p>
             </div>
 
             {/* Right Columns: Site navigation & status */}
@@ -282,16 +349,6 @@ export function Footer() {
               color: "var(--foreground, #1C1613)",
             }}
           >
-            {/* Notch Tab Label on top-left corner */}
-            <div className="absolute top-0 left-0 pt-1.5 pl-6">
-              <span
-                className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider font-semibold"
-                style={{ color: "var(--accent, #B5611A)" }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                {FOOTER_CONTENT.notchLabel}
-              </span>
-            </div>
 
             <div className="pt-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
               {/* Left Column: Big Wordmark Heading & Subheading */}

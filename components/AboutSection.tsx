@@ -10,16 +10,15 @@ const CORE_STACK = [
   "TypeScript",
   "React",
   "PostgreSQL",
-  "Node.js",
+  "FastAPI",
   "Tailwind CSS",
-  "GSAP",
 ];
 
 const FOCUS_AREAS = [
-  "Full-Stack Web Systems",
+  "Building 2D Platformer Game",
   "AI Agents & Tooling",
   "Interactive Animation",
-  "Relational Database Design",
+  "Data Structures & Algorithms",
 ];
 
 export interface AboutSectionProps {
@@ -77,52 +76,40 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
             className="md:col-span-2 relative flex flex-col"
           >
             <div
-              className="tile-inner h-full w-full rounded-2xl border p-6 sm:p-8 transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md flex flex-col justify-between"
-              style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
-              }}
+              className="tile-inner h-full w-full overflow-hidden rounded-2xl border transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md flex flex-col sm:flex-row"
+              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
             >
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                <div
-                  className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-2xl border shadow-inner"
-                  style={{ borderColor: "var(--border-strong)" }}
-                >
-                  <Image
-                    src="/images/about-me.png"
-                    alt="Anas Alam portrait"
-                    fill
-                    className="object-cover"
-                    sizes="96px"
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
-                      Anas Alam
-                    </h3>
-                    <span
-                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium"
-                      style={{
-                        background: "var(--surface-elevated)",
-                        color: "var(--accent)",
-                        border: "1px solid var(--border)",
-                      }}
-                    >
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Open to work
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs font-mono" style={{ color: "var(--muted)" }}>
-                    Ranchi, India · UTC+5:30
-                  </p>
-                  <p className="mt-3 text-xs sm:text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
-                    Building AI-powered web applications with Next.js, TypeScript, and PostgreSQL. Focused on clean architecture, accessible components, and 60fps micro-interactions.
-                  </p>
-                </div>
+              {/* Photo: square, full height of the card on sm+ */}
+              <div
+                className="m-2 relative aspect-square w-auto shrink-0 self-stretch overflow-hidden rounded-xl"
+              >
+                <Image
+                  src="/images/about-me.png"
+                  alt="Anas Alam portrait"
+                  fill
+                  className="object-cover object-top"
+                  sizes="(min-width: 640px) 320px, 100vw"
+                />
               </div>
 
-              <div className="mt-6 pt-5 border-t flex flex-wrap items-center justify-between gap-3 text-xs" style={{ borderColor: "var(--border)" }}>
+              {/* Text column: owns the padding now */}
+              <div className="flex min-w-0 flex-1 flex-col justify-between gap-5 p-6 sm:p-8">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
+                    Anas Alam
+                  </h3>
+                  <p className="mt-1 text-xs font-mono" style={{ color: "var(--muted)" }}>
+                    Ranchi, India. UTC+5:30
+                  </p>
+                  <p className="mt-3 text-xs sm:text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
+                    Hi, I’m Anas. I build AI-powered web apps, front to back. I like products that feel simple to use, which usually means a lot of invisible work on layout, speed and small details. When I’m not coding, I’m usually drawing, solving a Rubik’s cube, or losing a chess game.
+                  </p>
+                </div>
+
+                {/* Move the rest of the card here: the divider and the Primary Stack row */}
+              </div>
+
+              {/* <div className="mt-6 pt-5 border-t flex flex-wrap items-center justify-between gap-3 text-xs" style={{ borderColor: "var(--border)" }}>
                 <span className="font-mono text-xs" style={{ color: "var(--muted)" }}>
                   Primary Stack:
                 </span>
@@ -131,7 +118,7 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
                     <TagPill key={tech} label={tech} size="sm" variant="subtle" />
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -156,7 +143,7 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
                   Bachelor of Computer Applications (BCA)
                 </h4>
                 <p className="mt-1 text-xs" style={{ color: "var(--accent)" }}>
-                  First Year (2024 – 2027)
+                  First Year (2025 – 2029)
                 </p>
                 <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
                   Dr. Shyama Prasad Mukherjee University, Ranchi
@@ -165,7 +152,7 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
 
               <div className="mt-6 pt-4 border-t" style={{ borderColor: "var(--border)" }}>
                 <p className="text-[11px] font-mono leading-relaxed" style={{ color: "var(--muted)" }}>
-                  Coursework: Data Structures &amp; Algorithms, Discrete Mathematics, OOP, Relational Databases.
+                  Coursework: Data Structures &amp; Algorithms, Calculus, OOPS, Relational Databases.
                 </p>
               </div>
             </div>
@@ -189,7 +176,7 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
                   Proficiencies
                 </span>
                 <h4 className="mt-2 text-lg font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
-                  Full-Stack Architecture
+                  Full-Stack
                 </h4>
                 <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
                   End-to-end application development with strict typing, server components, and responsive frontends.
@@ -220,31 +207,15 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
               <div>
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-mono uppercase tracking-wider" style={{ color: "var(--muted)" }}>
-                    Traditional Art &amp; Mind
+                    etc.
                   </span>
-                  {/* Subtle pencil drawing icon */}
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ color: "var(--muted)" }}
-                    aria-hidden="true"
-                  >
-                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
+
                 </div>
                 <h4 className="mt-2 text-lg font-bold tracking-tight" style={{ color: "var(--foreground)" }}>
-                  Pencil &amp; Graphite Studies
+                  Hobbies
                 </h4>
                 <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
-                  Observational sketching, cross-hatching, and geometric perspective studies. Developing spatial awareness, proportion, and balance.
-                </p>
+                  Off the clock: pencil sketches, Rubik’s cubes, chess, anime and manga, and the occasional Minecraft build.                </p>
               </div>
 
               {/* Hobbies List: Cubing and Chess */}
@@ -290,7 +261,7 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
                         Cubing
                       </p>
                       <p className="text-[10px] leading-tight truncate" style={{ color: "var(--muted)" }}>
-                        Speed &amp; 3D Patterns
+                        pb: 14.55s
                       </p>
                     </div>
                   </div>
@@ -333,7 +304,7 @@ export function AboutSection({ theme = "light" }: AboutSectionProps) {
                         Chess
                       </p>
                       <p className="text-[10px] leading-tight truncate" style={{ color: "var(--muted)" }}>
-                        Strategy &amp; Tactics
+                        elo: 1400
                       </p>
                     </div>
                   </div>

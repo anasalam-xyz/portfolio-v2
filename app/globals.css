@@ -44,6 +44,13 @@
   --nav-logo-text: #1C1613;
   --nav-logo-border: rgba(28, 22, 19, 0.10);
 
+  /* Heatmap Cream to Camel to Espresso Ramp */
+  --heatmap-0: rgba(28, 22, 19, 0.05);
+  --heatmap-1: #EADCCE;
+  --heatmap-2: #D6B595;
+  --heatmap-3: var(--earth);
+  --heatmap-4: var(--accent);
+
   /* Emil Kowalski motion curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -91,6 +98,13 @@
   --nav-logo-bg: rgba(255, 255, 255, 0.08);
   --nav-logo-text: #FFFFFF;
   --nav-logo-border: rgba(255, 255, 255, 0.12);
+
+  /* Heatmap Cream to Camel to Espresso Ramp */
+  --heatmap-0: rgba(244, 239, 234, 0.05);
+  --heatmap-1: rgba(196, 146, 97, 0.22);
+  --heatmap-2: rgba(196, 146, 97, 0.50);
+  --heatmap-3: var(--earth);
+  --heatmap-4: var(--accent);
 }
 
 @theme inline {
@@ -310,6 +324,29 @@ html.lenis body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* ─── View Transitions API: Smooth Light/Dark Mode Cross-Fade ───────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 1s;
+  animation-timing-function: var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }
 

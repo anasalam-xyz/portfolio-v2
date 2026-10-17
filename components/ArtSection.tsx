@@ -31,9 +31,9 @@ const WARM_GRAPHITE_BLUR =
       width: 2898,
       height: 3624,
       alt: "Pencil portrait study focusing on realistic facial planes, soft lighting, and subtle tonal gradations",
-      title: "Portrait Study in Shadow",
+      title: "Evelyn",
       year: "2025",
-      medium: "2B–8B Graphite on Heavyweight Cartridge",
+      medium: "Baldur's Gate 3",
       blurDataURL: WARM_GRAPHITE_BLUR,
     },
     {
@@ -42,9 +42,9 @@ const WARM_GRAPHITE_BLUR =
       width: 3060,
       height: 3490,
       alt: "Dynamic pencil illustration of Choso with distinctive facial markings and intense cross-hatched gaze",
-      title: "Choso — Convergence",
+      title: "Choso",
       year: "2024",
-      medium: "Dark Graphite & Cross-Hatching on Bristol",
+      medium: "Jujutsu Kaisen",
       blurDataURL: WARM_GRAPHITE_BLUR,
   },
   {
@@ -53,9 +53,9 @@ const WARM_GRAPHITE_BLUR =
     width: 3060,
     height: 3024,
     alt: "Square format graphite study of Touka Kirishima with deep contrast and expressive feathering",
-    title: "Touka — Wings of Glass",
+    title: "Touka",
     year: "2024",
-    medium: "Pencil & Charcoal Shading on Fine Grain Paper",
+    medium: "Tokyo Ghoul",
     blurDataURL: WARM_GRAPHITE_BLUR,
   },
   {
@@ -64,9 +64,9 @@ const WARM_GRAPHITE_BLUR =
     width: 2993,
     height: 3666,
     alt: "Bold graphite drawing of Roronoa Zoro with bandana and textured ink-like shadow depths",
-    title: "Zoro — Asura Stance",
+    title: "Roronoa Zoro",
     year: "2024",
-    medium: "Graphite Contour & Dramatic Contrast",
+    medium: "One Piece",
     blurDataURL: WARM_GRAPHITE_BLUR,
   },
   {
@@ -74,10 +74,10 @@ const WARM_GRAPHITE_BLUR =
     src: "/images/art/hina.jpg",
     width: 2674,
     height: 3869,
-    alt: "Pencil sketch of Hina Amano praying with translucent raindrop reflections and soft gradient shading",
-    title: "Hina — Sunshine Girl",
+    alt: "Pencil sketch of Hina Chono praying with translucent raindrop reflections and soft gradient shading",
+    title: "Hina Chono",
     year: "2024",
-    medium: "Mechanical Pencil & Blending Stump on Paper",
+    medium: "Blue Box",
     blurDataURL: WARM_GRAPHITE_BLUR,
   },
   {
@@ -86,9 +86,9 @@ const WARM_GRAPHITE_BLUR =
     width: 2541,
     height: 3219,
     alt: "Expressive graphite drawing of Yuta Okkotsu with ring detail and dramatic psychological depth",
-    title: "Yuta — Rika's Vow",
+    title: "Yuta Okkotsu",
     year: "2024",
-    medium: "Fine Line Graphite & Shading on Paper",
+    medium: "Jujutsu Kaisen",
     blurDataURL: WARM_GRAPHITE_BLUR,
   },
   {
@@ -97,9 +97,9 @@ const WARM_GRAPHITE_BLUR =
     width: 2928,
     height: 3906,
     alt: "Detailed graphite pencil portrait study of Viktor with delicate mechanical accents and textured cross-hatching",
-    title: "Viktor — The Herald",
+    title: "Viktor - The Herald",
     year: "2024",
-    medium: "Graphite & Charcoal on Cold-Pressed Paper",
+    medium: "Arcane: League of Legends",
     blurDataURL: WARM_GRAPHITE_BLUR,
   },
 ];
@@ -342,7 +342,7 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
             className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight mt-1"
             style={{ color: "var(--foreground)" }}
           >
-            Pencil &amp; Graphite Studies
+            Pencil Sketches
           </h2>
           <p
             className="mt-3 text-xs sm:text-sm font-mono max-w-md mx-auto leading-relaxed"

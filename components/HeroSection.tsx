@@ -6,16 +6,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useBentoScatter } from "@/hooks/use-bento-scatter";
-import { TagPill } from "@/components/TagPill";
 // Register plugins once at module level per GSAP best practices
 gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-// ─── Multiple-Entry Data Definitions ─────────────────────────────────────────
-const SKILL_TAG_ROWS = [
-  ["Next.js", "React"],
-  ["Node.js", "Tailwind CSS"],
-  ["TypeScript", "PostgreSQL"],
-] as const;
 
 const SOCIAL_LINKS = [
   {
@@ -127,9 +119,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
   const headingAreaRef = React.useRef<HTMLDivElement>(null);
   const photoWrapperRef = React.useRef<HTMLDivElement>(null);
   const photoInnerRef = React.useRef<HTMLDivElement>(null);
-  const leftGroupRef = React.useRef<HTMLDivElement>(null);
-  const rightGroupRef = React.useRef<HTMLDivElement>(null);
-  const stampBadgeRef = React.useRef<HTMLDivElement>(null);
+  const socialsRowRef = React.useRef<HTMLDivElement>(null);
   const ctaDockRef = React.useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -156,41 +146,35 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           delay: 0.25,
         });
 
-        // Left floating group slides in via xPercent
-        gsap.from(leftGroupRef.current, {
+        // Socials row slides in from the left
+        gsap.from(socialsRowRef.current, {
           autoAlpha: 0,
-          xPercent: -30,
+          xPercent: -40,
           duration: 0.8,
           ease: "power3.out",
           delay: 0.45,
         });
 
-        // Right floating group slides in via xPercent
-        gsap.from(rightGroupRef.current, {
-          autoAlpha: 0,
-          xPercent: 30,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.5,
-        });
-
-        // Stamp badge pops in via scale
-        gsap.from(stampBadgeRef.current, {
-          autoAlpha: 0,
-          scale: 0.75,
-          duration: 0.7,
-          ease: "back.out(1.6)",
-          delay: 0.55,
-        });
-
-        // CTA dock floats up via yPercent
+        // CTA dock slides in from the right
         gsap.from(ctaDockRef.current, {
           autoAlpha: 0,
-          yPercent: 25,
-          duration: 0.7,
+          xPercent: 40,
+          duration: 0.8,
           ease: "power3.out",
-          delay: 0.6,
+          delay: 0.55,
         });
+      });
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(
+          [
+            headingAreaRef.current,
+            photoInnerRef.current,
+            socialsRowRef.current,
+            ctaDockRef.current,
+          ],
+          { autoAlpha: 1, xPercent: 0, yPercent: 0 }
+        );
       });
     },
     { scope: sectionRef }
@@ -309,191 +293,40 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          LEFT FLOATING GROUP — z-30, desktop only (lg:block, hidden below 1024px)
-          "Find Me On" + 3 Social Buttons (no self globe) + NeetCode 150 Stat Card
-          No backdrop-blur to ensure 60fps compositor scroll performance
+          BOTTOM CONTROLS CLUSTER — z-40
+          - Row 1: "Find Me On" buttons (slides in from left)
+          - Row 2: "View Projects" & "Download Resume" dock (slides in from right)
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div
-        ref={leftGroupRef}
-        data-tile
-        data-depth="1.1"
-        className="absolute z-30 hidden will-change-transform lg:block"
-        style={{
-          left: "clamp(2rem, 5vw, 6.5rem)",
-          top: "70%",
-        }}
-      >
-        {/* "Find Me On" label in DM Mono (text-xs >= 12px) */}
-        <p
-          className="ml-1 theme-transition font-mono text-xs font-medium uppercase tracking-wider"
-          style={{ color: "var(--muted)" }}
-        >
-          Find Me On
-        </p>
-
-        {/* Circular social buttons row (Email has no target="_blank") */}
-        <div className=" mt-2.5 flex flex-col items-left gap-2">
-          {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
-            <SocialButton
-              key={name}
-              href={href}
-              label={label}
-              isExternal={isExternal}
-            >
-              {name === "GitHub" && <GitHubIcon />}
-              {name === "LinkedIn" && <LinkedInIcon />}
-              {name === "Email" && <MailIcon />}
-            </SocialButton>
-          ))}
-        </div>
-
-        {/*
+      <div className="pointer-events-none absolute bottom-5 left-0 right-0 z-40 flex flex-col items-center gap-2.5 px-4 md:bottom-8">
+        {/* Socials Row */}
         <div
-          className="theme-transition mt-6 rounded-2xl border p-4 shadow-xs max-w-[220px]"
+          ref={socialsRowRef}
+          className="pointer-events-auto theme-transition inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 shadow-md will-change-transform"
           style={{
-            background: "var(--pill-bg)",
-            borderColor: "var(--pill-border)",
+            border: "1px solid var(--dock-border)",
           }}
         >
-          <p
-            className="theme-transition font-mono text-xs font-semibold leading-tight"
-            style={{ color: "var(--foreground)" }}
-          >
-            {dsaAchievement.title}
-          </p>
-          <p
-            className="theme-transition font-mono mt-1 text-xs font-normal leading-snug"
-            style={{ color: "var(--muted)" }}
-          >
-            {dsaAchievement.summary}
-          </p>
 
-          <div
-            className="mt-3 pt-2.5 border-t"
-            style={{ borderColor: "var(--border)" }}
-          >
-            <p
-              className="theme-transition font-mono text-xs font-medium leading-tight"
-              style={{ color: "var(--foreground)" }}
-            >
-              {contestAchievement.title}
-            </p>
-            <p
-              className="theme-transition font-mono mt-0.5 text-xs font-normal leading-snug"
-              style={{ color: "var(--muted)" }}
-            >
-              {contestAchievement.summary}
-            </p>
-          </div>
-        </div>**/}
-      </div> 
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          TOP-RIGHT ROTATING CIRCULAR STAMP BADGE — z-30 (lg:block, hidden below 1024px)
-          Text derived from person.lookingFor, textLength fills perimeter without gaps
-          CSS spin respects motion-reduce:animate-none
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* <div
-        ref={stampBadgeRef}
-        className="absolute z-30 hidden will-change-transform lg:block"
-        style={{
-          top: "16%",
-          right: "clamp(2rem, 7vw, 7rem)",
-        }}
-      >
-        <a
-          href="mailto:anasalam.xyz@gmail.com"
-          aria-label="Open to work — contact Anas Alam"
-          className="group focus-ring relative block h-[100px] w-[100px] rounded-full transition-transform hover:scale-105 active:scale-95"
-        >
-          <svg
-            className="animate-spin-slow motion-reduce:animate-none absolute inset-0 h-full w-full"
-            viewBox="0 0 100 100"
-            aria-hidden="true"
-          >
-            <defs>
-              <path
-                id="stampTextPath"
-                d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"
-                fill="none"
-              />
-            </defs>
-            <text
-              fontSize="7.8"
-              fontWeight="600"
-              fill="currentColor"
-              className="theme-transition font-mono"
-              style={{ color: "var(--foreground)" }}
-            >
-              <textPath
-                href="#stampTextPath"
-                textLength="226"
-                lengthAdjust="spacing"
+          <div className="flex items-center gap-1.5">
+            {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
+              <SocialButton
+                key={name}
+                href={href}
+                label={label}
+                isExternal={isExternal}
               >
-                OPEN TO REMOTE INTERNSHIPS • AVAILABLE NOW • 
-              </textPath>
-            </text>
-          </svg>
-
-          <div
-            className="theme-transition absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-md transition-transform group-hover:rotate-45"
-            style={{
-              background: "var(--surface)",
-              color: "var(--foreground)",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <ArrowRightIcon />
+                {name === "GitHub" && <GitHubIcon />}
+                {name === "LinkedIn" && <LinkedInIcon />}
+                {name === "Email" && <MailIcon />}
+              </SocialButton>
+            ))}
           </div>
-        </a>
-      </div> */}
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          RIGHT FLOATING GROUP — z-30, desktop only (lg:block, hidden below 1024px)
-          Tagline (no quote mark, no "obsessive craft") + Outlined Skill Cloud
-          No backdrop-blur on moving elements for smooth 60fps scrolling
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      {/* <div
-        ref={rightGroupRef}
-        data-tile
-        data-depth="0.9"
-        className="absolute z-30 hidden will-change-transform lg:block"
-        style={{
-          right: "clamp(2rem, 6vw, 6.5rem)",
-          top: "40%",
-        }}
-      >
-        <div className="max-w-[240px] text-right">
-          <p
-            className="theme-transition font-sans text-xs md:text-sm font-normal leading-relaxed"
-            style={{ color: "var(--foreground)" }}
-          >
-            Building AI-powered web applications with Next.js, TypeScript, and PostgreSQL.
-          </p>
         </div>
 
-        <div className="mt-5 flex flex-col items-end gap-2">
-          {SKILL_TAG_ROWS.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex items-center gap-1.5 font-mono">
-              {row.map((tag) => (
-                <TagPill key={tag} label={tag} />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div> */}
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          BOTTOM CENTER DUAL-CTA DOCK — z-40
-          Primary: View Projects -> #projects
-          Secondary: Download Resume -> /Anas_Alam_Resume.pdf
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div
-        ref={ctaDockRef}
-        className="absolute bottom-6 left-0 right-0 z-40 flex items-center justify-center px-4 md:bottom-8"
-      >
+        {/* Floating CTA Dock */}
         <div
-          className="theme-transition inline-flex items-center gap-1 rounded-full p-1.5 shadow-xl"
+          ref={ctaDockRef}
+          className="pointer-events-auto theme-transition inline-flex items-center gap-1 rounded-full p-1.5 shadow-xl will-change-transform"
           style={{
             background: "var(--dock-bg)",
             border: "1px solid var(--dock-border)",
@@ -517,7 +350,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
               }}
               aria-hidden="true"
             >
-              <ArrowRightIcon className="oh-3 w-3" />
+              <ArrowRightIcon className="h-3 w-3" />
             </span>
           </a>
 
@@ -537,42 +370,6 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
             Download Resume
           </a>
         </div>
-      </div>
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          MOBILE FLOATING ROW (below lg: < 1024px) — z-30
-          Shows compact socials & featured project pill without overlapping photo
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div className="absolute bottom-24 left-0 right-0 z-30 flex items-center justify-between px-5 lg:hidden">
-        <div className="flex gap-2">
-          {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
-            <SocialButton
-              key={name}
-              href={href}
-              label={label}
-              isExternal={isExternal}
-            >
-              {name === "GitHub" && <GitHubIcon />}
-              {name === "LinkedIn" && <LinkedInIcon />}
-              {name === "Email" && <MailIcon />}
-            </SocialButton>
-          ))}
-        </div>
-
-        <a
-          href="#projects"
-          className="pressable focus-ring theme-transition font-mono inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium"
-          style={{
-            background: "var(--pill-bg)",
-            borderColor: "var(--pill-border)",
-            color: "var(--tag-pill-text)",
-          }}
-        >
-          <span style={{ color: "var(--muted)" }} aria-hidden="true">
-            <ArrowUpRightIcon />
-          </span>
-          <span>RoundOne</span>
-        </a>
       </div>
     </section>
   );

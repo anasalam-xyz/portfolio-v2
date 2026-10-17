@@ -2,185 +2,252 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { TagPill } from "@/components/TagPill";
 
 export type ProjectImage = {
   src: string;      // path or imported asset URL
   alt: string;      // meaningful alt text
-  width: number;    // intrinsic dimensions, to reserve space and avoid layout shift
+  width: number;    // intrinsic dimensions
   height: number;
 };
 
 export type Project = {
-  id: string;                  // stable unique key, e.g. "roundone"
+  id: string;                    // stable unique key, e.g. "roundone"
   title: string;
-  description: string;         // short; the card clamps it to 2-3 lines
-  techStack: string[];         // rendered as chips, in display order
-  liveUrl?: string;            // hide the button if absent
-  repoUrl?: string;            // hide the button if absent
-  thumbnail: ProjectImage;     // required: the main image, and the only one shown on mobile
-  secondaryImage?: ProjectImage; // optional: desktop only, falls back gracefully if absent
+  description: string;           // short; the card clamps it
+  techStack: string[];           // rendered as chips, in display order
+  liveUrl?: string;              // hide the button if absent
+  repoUrl?: string;              // hide the button if absent
+  thumbnail: ProjectImage;       // fallback main image
+  secondaryImage?: ProjectImage; // optional
+  category?: string;             // optional editorial category
+  year?: string;                 // optional release/development year
+  images?: ProjectImage[];       // screenshots array
 };
 
 export type Projects = Project[];
 
 export interface ProjectCardProps {
   project: Project;
+  index: number;
   priority?: boolean;
 }
 
-export function ProjectCard({ project, priority = false }: ProjectCardProps) {
-  const { title, description, techStack, liveUrl, repoUrl, thumbnail, secondaryImage } = project;
+const DARK_ESPRESSO_BLUR =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMCAxMCc+PHJlY3Qgd2lkdGg9JzEwJyBoZWlnaHQ9JzEwJyBmaWxsPScjMTIxMDBlJy8+PC9zdmc+";
+
+export function ProjectCard({ project, index, priority = false }: ProjectCardProps) {
+  const { title, description, techStack, liveUrl, repoUrl, category, year, thumbnail, secondaryImage } = project;
+  const numberStr = String(index + 1).padStart(2, "0");
+  const metaText = [category, year].filter(Boolean).join(" · ");
+
+  // Exactly two photos: primary (thumbnail) and secondary (secondaryImage || images?.[1])
+  const img1 = thumbnail || (project.images && project.images[0]);
+  const img2 = secondaryImage || (project.images && project.images.length > 1 ? project.images[1] : undefined);
 
   return (
     <article
       data-project-card
-      className="theme-transition relative w-[88vw] sm:w-[85vw] lg:w-[80vw] max-w-[1100px] shrink-0 h-[560px] sm:h-[500px] lg:h-[480px] rounded-3xl border select-none overflow-hidden snap-center flex flex-col lg:flex-row"
+      className="theme-transition relative w-[88vw] sm:w-[84vw] lg:w-[76vw] max-w-[1100px] shrink-0 select-none rounded-3xl border overflow-hidden shadow-xl flex flex-col"
       style={{
         background: "var(--surface)",
         borderColor: "var(--border)",
       }}
     >
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          MOBILE LAYOUT: Thumbnail on top (hidden on desktop)
-          Shows single image only
+          TOP: Fixed-height Media Area with EXACTLY two photos & parallax
+          - No buttons, badges, or overlays
+          - Both photos sit inside overflow-hidden frames with matching height
+          - Horizontal parallax at slightly different speeds
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div className="lg:hidden relative h-[210px] sm:h-[230px] w-full shrink-0 overflow-hidden border-b border-[var(--border)]">
-        <Image
-          src={thumbnail.src}
-          alt={thumbnail.alt}
-          width={thumbnail.width}
-          height={thumbnail.height}
-          priority={priority}
-          sizes="(max-width: 1024px) 88vw, 600px"
-          className="h-full w-full object-cover object-top"
-        />
+      <div
+        className="relative w-full h-[180px] sm:h-[220px] lg:h-[260px] shrink-0 overflow-hidden bg-[var(--surface-elevated)] border-b"
+        style={{ borderColor: "var(--border)" }}
+      >
+        {img2 ? (
+          // Two photos side-by-side with parallax
+          <div className="shadow-lg flex gap-1 h-full w-full items-center">
+            {/* Photo 1 (Primary): slightly wider frame */}
+            <div className="relative h-full flex-[1.2] lg:flex-[1.25] overflow-hidden bg-[var(--surface)]">
+              <div
+                data-parallax="primary"
+                className="relative h-full w-[120%] -left-[10%] will-change-transform"
+              >
+                <Image
+                  src={img1.src}
+                  alt={img1.alt}
+                  fill
+                  priority={priority}
+                  loading={priority ? "eager" : "lazy"}
+                  sizes="(min-width: 1024px) 45vw, 60vw"
+                  placeholder="blur"
+                  blurDataURL={DARK_ESPRESSO_BLUR}
+                  className="object-cover object-top select-none pointer-events-none"
+                />
+              </div>
+            </div>
+
+            {/* Photo 2 (Secondary): complementary frame */}
+            <div className="relative h-full flex-1 overflow-hidden bg-[var(--surface)]">
+              <div
+                data-parallax="secondary"
+                className="relative h-full w-[130%] -left-[15%] will-change-transform"
+              >
+                <Image
+                  src={img2.src}
+                  alt={img2.alt}
+                  fill
+                  loading="lazy"
+                  sizes="(min-width: 1024px) 35vw, 40vw"
+                  placeholder="blur"
+                  blurDataURL={DARK_ESPRESSO_BLUR}
+                  className="object-cover object-top select-none pointer-events-none"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Single photo fallback: fills 100% width with no gap
+          <div className="relative h-full w-full overflow-hidden bg-[var(--surface)]">
+            <div
+              data-parallax="primary"
+              className="relative h-full w-[120%] -left-[10%] will-change-transform"
+            >
+              <Image
+                src={img1.src}
+                alt={img1.alt}
+                fill
+                priority={priority}
+                loading={priority ? "eager" : "lazy"}
+                sizes="(min-width: 1024px) 76vw, 88vw"
+                placeholder="blur"
+                blurDataURL={DARK_ESPRESSO_BLUR}
+                className="object-cover object-top select-none pointer-events-none"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          LEFT COLUMN (Desktop): Text, stack chips, and action buttons
+          BOTTOM: Text Content Area (UNTOUCHED)
+          - Label, "01" number, title, description, tech chips, Live/Source buttons
+          - Normal padding below the buttons
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
-        data-parallax="text"
-        className="flex-1 p-6 sm:p-8 lg:p-10 flex flex-col justify-between overflow-hidden will-change-transform"
+        className="relative w-full flex-1 p-5 sm:p-7 lg:p-8 flex flex-col justify-between overflow-hidden z-10 select-text"
+        style={{
+          background: "var(--surface)",
+        }}
       >
-        <div className="space-y-4">
-          <div className="flex items-center justify-between gap-4">
+        {/* Giant Outlined Number in Top-Right inside the panel (contained, clipped by overflow-hidden) */}
+        <div
+          data-parallax="number"
+          className="absolute -top-3 sm:-top-5 -right-1 sm:right-4 z-0 pointer-events-none will-change-transform select-none"
+        >
+          <span
+            aria-hidden="true"
+            className="font-display font-bold text-6xl sm:text-8xl lg:text-9xl tracking-tighter leading-none block select-none opacity-40 sm:opacity-100"
+            style={{
+              color: "transparent",
+              WebkitTextStroke: "1.5px color-mix(in srgb, var(--foreground) 25%, transparent)",
+            }}
+          >
+            {numberStr}
+          </span>
+        </div>
+
+        {/* Content Section */}
+        <div className="relative z-10 space-y-1.5 sm:space-y-2.5">
+          {metaText && (
+            <p
+              className="font-mono text-xs uppercase tracking-wider"
+              style={{ color: "var(--muted)" }}
+            >
+              {metaText}
+            </p>
+          )}
+
+          {/* Project Title (Display Serif) */}
+          <div data-parallax="title" className="will-change-transform">
             <h3
-              className="font-bold text-2xl sm:text-3xl tracking-tight"
-              style={{ color: "var(--foreground)" }}
+              className="font-display font-medium tracking-tight leading-[0.95]"
+              style={{
+                fontSize: "clamp(2.25rem, 4.5vw, 4.25rem)",
+                color: "var(--foreground)",
+              }}
             >
               {title}
             </h3>
           </div>
 
-          {/* Short description clamped to 2-3 lines so cards maintain equal visual rhythm */}
+          {/* One-line Description */}
           <p
-            className="text-xs sm:text-sm leading-relaxed line-clamp-3"
+            className="font-sans text-xs sm:text-sm truncate max-w-[85%] lg:max-w-[70%] leading-relaxed"
             style={{ color: "var(--muted)" }}
           >
             {description}
           </p>
+        </div>
 
-          {/* Tech Stack Chips */}
-          <div className="pt-2 flex flex-wrap gap-1.5">
+        {/* Bottom Row: Outlined Tech Pills & Action Buttons */}
+        <div
+          className="relative z-10 pt-3 sm:pt-4 flex flex-wrap items-center justify-between gap-3 border-t"
+          style={{ borderColor: "var(--border)" }}
+        >
+          {/* Outlined Tech-Tag Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {techStack.map((tech) => (
-              <TagPill key={tech} label={tech} size="sm" variant="subtle" />
+              <span
+                key={tech}
+                className="font-mono text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 rounded-full border bg-transparent font-medium"
+                style={{
+                  borderColor: "var(--border-strong)",
+                  color: "var(--foreground)",
+                }}
+              >
+                {tech}
+              </span>
             ))}
           </div>
-        </div>
 
-        {/* Action Buttons: Live and Repo Links (hidden without gap if absent) */}
-        <div className="pt-6 border-t flex flex-wrap items-center gap-3" style={{ borderColor: "var(--border)" }}>
-          {liveUrl && (
-            <a
-              href={liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`View ${title} live demo in a new tab`}
-              className="group pressable focus-ring inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-mono font-bold shadow-xs transition-opacity hover:opacity-95"
-              style={{
-                background: "var(--accent)",
-                color: "#FFFFFF",
-              }}
-            >
-              <span>View Live</span>
-              <span className="text-[11px] transition-transform group-hover:translate-x-0.5">↗</span>
-            </a>
-          )}
+          {/* Action Buttons: View Live (amber-accent) & Source Code (outlined) */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {liveUrl && (
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${title} live demo in a new tab`}
+                className="group/btn pressable focus-ring inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2 text-xs font-mono font-bold shadow-xs transition-opacity hover:opacity-95"
+                style={{
+                  background: "var(--accent)",
+                  color: "var(--cta-primary-text, #181715)",
+                }}
+              >
+                <span>View Live</span>
+                <span className="text-[11px] transition-transform group-hover/btn:translate-x-0.5">↗</span>
+              </a>
+            )}
 
-          {repoUrl && (
-            <a
-              href={repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`View ${title} source code on GitHub in a new tab`}
-              className="group pressable focus-ring inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-mono font-medium border transition-colors hover:border-[var(--accent)]"
-              style={{
-                background: "var(--surface-elevated)",
-                borderColor: "var(--border-strong)",
-                color: "var(--foreground)",
-              }}
-            >
-              <span>Source Code</span>
-              <span className="text-[11px] transition-transform group-hover:translate-x-0.5">↗</span>
-            </a>
-          )}
-        </div>
-      </div>
-
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          RIGHT COLUMN (Desktop only): Composed two-image layout with parallax frames
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div className="hidden lg:block relative w-[48%] h-full shrink-0 p-8 overflow-hidden bg-[var(--surface-elevated)]">
-        {/* Primary/Large Image Frame (oversized by 15% for smooth scrubbed parallax) */}
-        <div
-          className={`relative h-full w-full rounded-2xl border overflow-hidden shadow-md ${
-            secondaryImage ? "w-[84%] h-[82%]" : "w-full h-full"
-          }`}
-          style={{ borderColor: "var(--border-strong)" }}
-        >
-          <div
-            data-parallax="primary"
-            className="relative h-full w-[136%] -left-[18%] will-change-transform"
-          >
-            <Image
-              src={thumbnail.src}
-              alt={thumbnail.alt}
-              width={thumbnail.width}
-              height={thumbnail.height}
-              priority={priority}
-              sizes="(min-width: 1024px) 42vw, 600px"
-              className="h-full w-full object-cover object-left-top"
-            />
+            {repoUrl && (
+              <a
+                href={repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${title} source code on GitHub in a new tab`}
+                className="group/btn pressable focus-ring inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2 text-xs font-mono font-medium border transition-colors hover:border-[var(--accent)]"
+                style={{
+                  borderColor: "var(--border-strong)",
+                  background: "var(--surface-elevated)",
+                  color: "var(--foreground)",
+                }}
+              >
+                <span>Source Code</span>
+                <span className="text-[11px] transition-transform group-hover/btn:translate-x-0.5">↗</span>
+              </a>
+            )}
           </div>
         </div>
-
-        {/* Secondary/Offset Image Frame (optional: desktop only, graceful fallback if absent) */}
-        {secondaryImage && (
-          <div
-            className="absolute bottom-6 right-6 w-[56%] h-[54%] rounded-xl border overflow-hidden shadow-2xl z-10"
-            style={{
-              borderColor: "var(--border-strong)",
-              background: "var(--surface)",
-            }}
-          >
-            <div
-              data-parallax="secondary"
-              className="relative h-full w-[165%] -left-[32.5%] will-change-transform"
-            >
-              <Image
-                src={secondaryImage.src}
-                alt={secondaryImage.alt}
-                width={secondaryImage.width}
-                height={secondaryImage.height}
-                priority={priority}
-                sizes="(min-width: 1024px) 26vw, 400px"
-                className="h-full w-full object-cover object-left-top"
-              />
-            </div>
-          </div>
-        )}
       </div>
     </article>
   );

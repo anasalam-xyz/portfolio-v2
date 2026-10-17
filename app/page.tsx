@@ -1,43 +1,12 @@
-"use client";
+import { HomeSections } from "@/components/HomeSections";
+import { getGitHubActivity } from "@/lib/github";
+import { getLeetCodeActivity } from "@/lib/leetcode";
 
-import * as React from "react";
-import { HeroSection } from "@/components/HeroSection";
-import { AboutSection } from "@/components/AboutSection";
-import { ProjectsSection } from "@/components/ProjectsSection";
-import { SkillsSection } from "@/components/SkillsSection";
-import { ArtSection } from "@/components/ArtSection";
-import { useTheme } from "@/hooks/use-theme";
+export default async function Home() {
+  const [githubData, leetcodeData] = await Promise.all([
+    getGitHubActivity(),
+    getLeetCodeActivity(),
+  ]);
 
-export default function Home() {
-  const { theme } = useTheme();
-
-  return (
-    <div
-      data-theme={theme}
-      className="theme-transition min-h-screen"
-      style={{
-        background: "var(--canvas)",
-        color: "var(--foreground)",
-      }}
-    >
-      <main>
-        {/* Hero Section */}
-        <HeroSection theme={theme} />
-
-        {/* About Section Bento with Scatter Parallax */}
-        <AboutSection theme={theme} />
-
-        {/* Selected Work Section */}
-        <ProjectsSection theme={theme} />
-
-        {/* Skills & Technologies Section */}
-        <SkillsSection theme={theme} />
-
-        {/* Traditional Art & Studies Section */}
-        <ArtSection theme={theme} />
-      </main>
-    </div>
-  );
+  return <HomeSections githubData={githubData} leetcodeData={leetcodeData} />;
 }
-
-

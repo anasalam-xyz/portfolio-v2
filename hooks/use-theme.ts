@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { flushSync } from "react-dom";
 
 export type Theme = "light" | "dark";
 
@@ -11,6 +12,8 @@ if (typeof window !== "undefined") {
     const saved = localStorage.getItem("hero-theme");
     if (saved === "light" || saved === "dark") {
       currentTheme = saved;
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      currentTheme = "dark";
     }
   } catch {
     // localStorage may be unavailable
@@ -26,6 +29,42 @@ function subscribeTheme(callback: () => void) {
   };
 }
 
+function applyThemeChange(nextTheme: Theme) {
+  currentTheme = nextTheme;
+  try {
+    localStorage.setItem("hero-theme", currentTheme);
+  } catch {
+    // ignore
+  }
+  if (typeof document !== "undefined") {
+    document.documentElement.setAttribute("data-theme", currentTheme);
+  }
+  themeListeners.forEach((listener) => listener());
+}
+
+function transitionTheme(nextTheme: Theme) {
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Fallback to instant switch when View Transitions API is unsupported or prefers-reduced-motion is active
+  if (
+    typeof document === "undefined" ||
+    !("startViewTransition" in document) ||
+    typeof document.startViewTransition !== "function" ||
+    prefersReduced
+  ) {
+    applyThemeChange(nextTheme);
+    return;
+  }
+
+  document.startViewTransition(() => {
+    flushSync(() => {
+      applyThemeChange(nextTheme);
+    });
+  });
+}
+
 export function useTheme() {
   const theme = React.useSyncExternalStore<Theme>(
     subscribeTheme,
@@ -38,30 +77,13 @@ export function useTheme() {
   }, [theme]);
 
   const toggleTheme = React.useCallback(() => {
-    currentTheme = currentTheme === "light" ? "dark" : "light";
-    try {
-      localStorage.setItem("hero-theme", currentTheme);
-    } catch {
-      // ignore
-    }
-    if (typeof document !== "undefined") {
-      document.documentElement.setAttribute("data-theme", currentTheme);
-    }
-    themeListeners.forEach((listener) => listener());
+    const next = currentTheme === "light" ? "dark" : "light";
+    transitionTheme(next);
   }, []);
 
   const setTheme = React.useCallback((newTheme: Theme) => {
     if (newTheme === currentTheme) return;
-    currentTheme = newTheme;
-    try {
-      localStorage.setItem("hero-theme", currentTheme);
-    } catch {
-      // ignore
-    }
-    if (typeof document !== "undefined") {
-      document.documentElement.setAttribute("data-theme", currentTheme);
-    }
-    themeListeners.forEach((listener) => listener());
+    transitionTheme(newTheme);
   }, []);
 
   return { theme, toggleTheme, setTheme };

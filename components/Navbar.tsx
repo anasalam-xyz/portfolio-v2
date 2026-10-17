@@ -54,6 +54,8 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
   const navUlRef = React.useRef<HTMLUListElement>(null);
   const linkRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
   const lenis = useLenis();
+  const isClickScrollingRef = React.useRef(false);
+  const clickScrollTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const isLight = currentTheme === "light";
 
@@ -114,38 +116,107 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
     updateIndicator();
     const raf = requestAnimationFrame(updateIndicator);
     window.addEventListener("resize", updateIndicator);
+
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(updateIndicator);
+    }
+
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", updateIndicator);
     };
   }, [updateIndicator]);
 
-  // Scroll spy to sync activeHref with current section
+  // Click handler with scroll lock so underline doesn't jitter while animating
+  const handleNavClick = React.useCallback(
+    (href: string, e: React.MouseEvent) => {
+      setActiveHref(href);
+      isClickScrollingRef.current = true;
+      if (clickScrollTimeoutRef.current) {
+        clearTimeout(clickScrollTimeoutRef.current);
+      }
+      clickScrollTimeoutRef.current = setTimeout(() => {
+        isClickScrollingRef.current = false;
+      }, 1000);
+
+      if (lenis && href.startsWith("#")) {
+        e.preventDefault();
+        if (href === "#") {
+          lenis.scrollTo(0);
+        } else {
+          lenis.scrollTo(href);
+        }
+      }
+    },
+    [lenis]
+  );
+
+  // Scroll spy to sync activeHref across all 5 sections: Home, About, Work, Art, Contact
   React.useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 20);
 
+      if (isClickScrollingRef.current) return;
+
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      const isBottom = window.scrollY + clientHeight >= scrollHeight - 60;
+
+      if (isBottom) {
+        setActiveHref("#footer");
+        return;
+      }
+
+      const threshold = Math.min(220, clientHeight * 0.35);
+
+      const footerEl = document.getElementById("footer");
+      const artEl = document.getElementById("art");
       const projectsEl = document.getElementById("projects");
       const aboutEl = document.getElementById("about");
-      const scrollPos = window.scrollY + 140;
 
-      if (aboutEl && scrollPos >= aboutEl.offsetTop) {
-        setActiveHref("#about");
-      } else if (projectsEl && scrollPos >= projectsEl.offsetTop) {
+      if (footerEl && footerEl.getBoundingClientRect().top <= threshold) {
+        setActiveHref("#footer");
+      } else if (artEl && artEl.getBoundingClientRect().top <= threshold) {
+        setActiveHref("#art");
+      } else if (projectsEl && projectsEl.getBoundingClientRect().top <= threshold) {
         setActiveHref("#projects");
+      } else if (aboutEl && aboutEl.getBoundingClientRect().top <= threshold) {
+        setActiveHref("#about");
       } else {
         setActiveHref("#");
       }
     };
 
+    const cancelClickScroll = () => {
+      if (isClickScrollingRef.current) {
+        isClickScrollingRef.current = false;
+        if (clickScrollTimeoutRef.current) {
+          clearTimeout(clickScrollTimeoutRef.current);
+        }
+      }
+    };
+
+    // Run once on mount to establish initial active state based on current scroll position
+    onScroll();
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("wheel", cancelClickScroll, { passive: true });
+    window.addEventListener("touchstart", cancelClickScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", cancelClickScroll);
+      window.removeEventListener("touchstart", cancelClickScroll);
+      if (clickScrollTimeoutRef.current) {
+        clearTimeout(clickScrollTimeoutRef.current);
+      }
+    };
   }, []);
 
   return (
     <header
       data-theme={currentTheme}
-      className="fixed left-0 right-0 top-4 z-50 flex justify-center px-4 md:top-5"
+      className="mx-auto w-fit fixed left-0 right-0 top-4 z-50 flex justify-center px-4 md:top-5"
     >
       <nav
         className="opacity-90 backdrop-blur-xl theme-transition flex w-full max-w-3xl items-center justify-between gap-3 rounded-full px-4 py-2 font-sans backdrop-blur-md md:px-5 md:py-2.5"
@@ -161,13 +232,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
           href="#"
           className="pressable focus-ring flex min-h-[44px] shrink-0 items-center gap-2.5 rounded-full"
           aria-label="Anas Alam — home"
-          onClick={(e) => {
-            setActiveHref("#");
-            if (lenis) {
-              e.preventDefault();
-              lenis.scrollTo(0);
-            }
-          }}
+          onClick={(e) => handleNavClick("#", e)}
         >
 
           <span
@@ -204,22 +269,10 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = themeStyles.textMuted;
-                      e.currentTarget.style.backgroundColor = "transparent";
-                    }
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = isActive ? themeStyles.accent : themeStyles.textMuted;
                   }}
-                  onClick={(e) => {
-                    setActiveHref(href);
-                    if (lenis && href.startsWith("#")) {
-                      e.preventDefault();
-                      if (href === "#") {
-                        lenis.scrollTo(0);
-                      } else {
-                        lenis.scrollTo(href);
-                      }
-                    }
-                  }}
+                  onClick={(e) => handleNavClick(href, e)}
                 >
                   {label}
                 </a>

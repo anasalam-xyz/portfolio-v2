@@ -4,8 +4,9 @@ import * as React from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { SectionBadge } from "@/components/SectionBadge";
 import { ProjectCard, Projects } from "@/components/ProjectCard";
+import { useLenis } from "@/components/smooth-scroll";
+import { useRef } from "react";
 
 export type { ProjectImage, Project, Projects } from "@/components/ProjectCard";
 
@@ -19,6 +20,8 @@ export const PROJECTS: Projects = [
     description:
       "An AI mock interview platform that conducts voice-driven technical interviews, asks adaptive follow-up questions, and scores answers with granular feedback.",
     techStack: ["Next.js 15", "TypeScript", "PostgreSQL", "Groq API", "Tailwind CSS"],
+    category: "AI Interview Platform",
+    year: "2025",
     liveUrl: "https://getroundone.vercel.app/",
     repoUrl: "https://github.com/anasalam-xyz/RoundOne",
     thumbnail: {
@@ -33,6 +36,32 @@ export const PROJECTS: Projects = [
       width: 1920,
       height: 1200,
     },
+    images: [
+      {
+        src: "/images/projects/roundone/landing.png",
+        alt: "RoundOne AI interview platform landing interface",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/interview.png",
+        alt: "RoundOne live adaptive interview session",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/dashboard.png",
+        alt: "RoundOne candidate analytics dashboard",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/result.png",
+        alt: "RoundOne technical performance evaluation report",
+        width: 1920,
+        height: 1200,
+      },
+    ],
   },
   {
     id: "worknest",
@@ -40,6 +69,8 @@ export const PROJECTS: Projects = [
     description:
       "A collaborative workspace and team task management platform with role-based JWT authentication, task lifecycle workflows, and 10+ REST endpoints.",
     techStack: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+    category: "Collaborative Workspace",
+    year: "2024",
     liveUrl: "https://worknest-teams.vercel.app",
     repoUrl: "https://github.com/anasalam-xyz/worknest",
     thumbnail: {
@@ -54,6 +85,32 @@ export const PROJECTS: Projects = [
       width: 1920,
       height: 1200,
     },
+    images: [
+      {
+        src: "/images/projects/worknest/dashboard.png",
+        alt: "WorkNest team workspace and project dashboard",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/worknest/project.png",
+        alt: "WorkNest task management and project board",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/worknest/login.png",
+        alt: "WorkNest authentication and workspace access",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/worknest/dashboard.png",
+        alt: "WorkNest collaborative sprint board overview",
+        width: 1920,
+        height: 1200,
+      },
+    ],
   },
   {
     id: "blog-api",
@@ -61,6 +118,8 @@ export const PROJECTS: Projects = [
     description:
       "An asynchronous RESTful backend service built to learn modern Python backend architecture, featuring async SQLAlchemy 2.0 and JWT auth on Neon PostgreSQL.",
     techStack: ["FastAPI", "Python", "SQLAlchemy", "PostgreSQL", "JWT", "Pydantic"],
+    category: "Backend API Service",
+    year: "2024",
     repoUrl: "https://github.com/anasalam-xyz/blog-api",
     thumbnail: {
       src: "/images/projects/roundone/auth.png",
@@ -74,6 +133,32 @@ export const PROJECTS: Projects = [
       width: 1920,
       height: 1200,
     },
+    images: [
+      {
+        src: "/images/projects/roundone/auth.png",
+        alt: "Blog API authentication and architecture documentation",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/dashboard.png",
+        alt: "Blog API schema and endpoint explorer",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/landing.png",
+        alt: "Blog API documentation and route specification",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/result.png",
+        alt: "Blog API automated test suite results",
+        width: 1920,
+        height: 1200,
+      },
+    ],
   },
   {
     id: "coop-platformer",
@@ -81,6 +166,8 @@ export const PROJECTS: Projects = [
     description:
       "A two-player browser platformer built around real-time communication where both players share one level but collide with different versions of it.",
     techStack: ["TypeScript", "Phaser 3", "Node.js", "WebSockets"],
+    category: "Multiplayer Web Game",
+    year: "2024",
     thumbnail: {
       src: "/images/projects/roundone/result.png",
       alt: "Co-op Platformer gameplay mechanics and synchronization view",
@@ -93,6 +180,32 @@ export const PROJECTS: Projects = [
       width: 1920,
       height: 1200,
     },
+    images: [
+      {
+        src: "/images/projects/roundone/result.png",
+        alt: "Co-op Platformer gameplay mechanics and synchronization view",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/worknest/login.png",
+        alt: "Co-op Platformer level overview and lobby interface",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/worknest/project.png",
+        alt: "Co-op Platformer multiplayer session and physics state",
+        width: 1920,
+        height: 1200,
+      },
+      {
+        src: "/images/projects/roundone/landing.png",
+        alt: "Co-op Platformer title screen and player matchmaking",
+        width: 1920,
+        height: 1200,
+      },
+    ],
   },
 ];
 
@@ -102,7 +215,9 @@ export interface ProjectsSectionProps {
 
 export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
   const sectionRef = React.useRef<HTMLElement>(null);
-  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const trackRef = React.useRef<HTMLDivElement>(null);
+  const scrollTriggerRef = React.useRef<ScrollTrigger | null>(null);
+  const lenis = useLenis();
 
   // Carousel navigation state
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -110,328 +225,212 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(true);
 
-  // Click-drag state
-  const isDraggingRef = React.useRef(false);
-  const startXRef = React.useRef(0);
-  const scrollLeftRef = React.useRef(0);
-  const hasMovedRef = React.useRef(false);
+  const barRef = useRef<HTMLDivElement>(null);
 
-  const targetIndexRef = React.useRef(0);
+  // ── Programmatic Card Navigation via Lenis/Scroll ────────────────────────────
+  const goToCard = React.useCallback(
+    (targetIdx: number) => {
+      const st = scrollTriggerRef.current;
+      if (!st) return;
 
-  // ── Sync Scroll Progress and Active Card Index ───────────────────────────────
-  const updateScrollState = React.useCallback(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
+      const clampedIdx = Math.max(0, Math.min(PROJECTS.length - 1, targetIdx));
+      const targetScroll = st.start + (clampedIdx / (PROJECTS.length - 1)) * (st.end - st.start);
 
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    const progress = maxScroll > 0 ? el.scrollLeft / maxScroll : 0;
-    setScrollProgress(Math.min(1, Math.max(0, progress)));
+      if (lenis) {
+        lenis.scrollTo(targetScroll, {
+          duration: 0.8,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
+      } else {
+        window.scrollTo({
+          top: targetScroll,
+          behavior: "smooth",
+        });
+      }
+    },
+    [lenis]
+  );
 
-    // Determine active index based on card center relative to container center
-    const cardElements = Array.from(el.querySelectorAll<HTMLElement>("[data-project-card]"));
-    if (cardElements.length > 0) {
-      const containerRect = el.getBoundingClientRect();
-      const containerCenter = containerRect.left + containerRect.width / 2;
-      let closestIdx = 0;
-      let closestDist = Infinity;
-
-      cardElements.forEach((card, idx) => {
-        const rect = card.getBoundingClientRect();
-        const cardCenter = rect.left + rect.width / 2;
-        const dist = Math.abs(cardCenter - containerCenter);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestIdx = idx;
-        }
-      });
-
-      setCurrentIndex(closestIdx);
-      targetIndexRef.current = closestIdx;
-      setCanScrollPrev(closestIdx > 0);
-      setCanScrollNext(closestIdx < cardElements.length - 1);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    let rafId: number;
-    const handleScroll = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(updateScrollState);
-    };
-
-    el.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-    updateScrollState();
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      el.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [updateScrollState]);
-
-  // ── Arrow Navigation Controls ────────────────────────────────────────────────
-  const scrollToCard = React.useCallback((index: number) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    const cardElements = Array.from(el.querySelectorAll<HTMLElement>("[data-project-card]"));
-    const targetCard = cardElements[index];
-    if (targetCard) {
-      targetIndexRef.current = index;
-      const elRect = el.getBoundingClientRect();
-      const cardRect = targetCard.getBoundingClientRect();
-      const targetScroll = el.scrollLeft + (cardRect.left + cardRect.width / 2) - (elRect.left + elRect.width / 2);
-      el.scrollTo({ left: Math.max(0, targetScroll), behavior: "smooth" });
-    }
-  }, []);
-
-  const handlePrev = () => {
+  const handlePrev = React.useCallback(() => {
     if (currentIndex > 0) {
-      scrollToCard(currentIndex - 1);
+      goToCard(currentIndex - 1);
     }
-  };
+  }, [currentIndex, goToCard]);
 
-  const handleNext = () => {
+  const handleNext = React.useCallback(() => {
     if (currentIndex < PROJECTS.length - 1) {
-      scrollToCard(currentIndex + 1);
+      goToCard(currentIndex + 1);
     }
-  };
+  }, [currentIndex, goToCard]);
 
-  // ── Keyboard Navigation ──────────────────────────────────────────────────────
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      handlePrev();
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      handleNext();
-    }
-  };
-
-  // ── Wheel Redirection: Horizontal card advance until boundary, then vertical page scroll ─
+  // ── Keyboard Navigation (Left/Right arrows while section is active) ──────────
   React.useEffect(() => {
-    const scroller = scrollerRef.current;
-    const section = sectionRef.current;
-    if (!scroller || !section) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const st = scrollTriggerRef.current;
+      if (!st || !st.isActive) return;
 
-    let wheelCooldown = 0;
-
-    const onWheel = (e: WheelEvent) => {
-      // If user is actively performing horizontal trackpad scroll, let browser handle it natively
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        return;
-      }
-
-      const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-      if (maxScroll <= 0) return;
-
-      const cardElements = Array.from(scroller.querySelectorAll<HTMLElement>("[data-project-card]"));
-      if (cardElements.length === 0) return;
-
-      // Gate: Horizontal scroll kicks in ONLY when the entire card height is on screen.
-      // This prevents unwanted horizontal scrolling while the cards are only partially visible.
-      const sampleCard = cardElements[targetIndexRef.current] || cardElements[0];
-      const cardRect = sampleCard.getBoundingClientRect();
-      const cardFits = cardRect.height <= window.innerHeight;
-      const isEntireCardOnScreen = cardFits
-        ? cardRect.top >= -2 && cardRect.bottom <= window.innerHeight + 2
-        : cardRect.top <= 2 && cardRect.bottom >= window.innerHeight - 2;
-
-      if (!isEntireCardOnScreen) {
-        return;
-      }
-
-      const isScrollingDown = e.deltaY > 0;
-      const isScrollingUp = e.deltaY < 0;
-
-      const atStart = targetIndexRef.current <= 0 && scroller.scrollLeft <= 15;
-      const atEnd = targetIndexRef.current >= cardElements.length - 1 && scroller.scrollLeft >= maxScroll - 15;
-
-      if (isScrollingDown) {
-        if (!atEnd) {
-          // Inside projects: hijack vertical wheel and advance horizontally
-          e.preventDefault();
-          e.stopPropagation();
-
-          const now = Date.now();
-          if (now - wheelCooldown > 320) {
-            wheelCooldown = now;
-
-            if (targetIndexRef.current < cardElements.length - 1) {
-              const nextIdx = targetIndexRef.current + 1;
-              scrollToCard(nextIdx);
-            } else {
-              scroller.scrollTo({
-                left: maxScroll,
-                behavior: "smooth",
-              });
-            }
-          }
-        }
-        // When atEnd: do NOT call preventDefault or stopPropagation!
-        // The event bubbles directly to window, allowing Lenis to scroll page down!
-      } else if (isScrollingUp) {
-        if (!atStart) {
-          // Inside projects: hijack vertical wheel and move backwards horizontally
-          e.preventDefault();
-          e.stopPropagation();
-
-          const now = Date.now();
-          if (now - wheelCooldown > 320) {
-            wheelCooldown = now;
-
-            if (targetIndexRef.current > 0) {
-              const prevIdx = targetIndexRef.current - 1;
-              scrollToCard(prevIdx);
-            } else {
-              scroller.scrollTo({
-                left: 0,
-                behavior: "smooth",
-              });
-            }
-          }
-        }
-        // When atStart: do NOT call preventDefault or stopPropagation!
-        // The event bubbles directly to window, allowing Lenis to scroll page up!
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleNext();
       }
     };
 
-    section.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handlePrev, handleNext]);
 
-    return () => {
-      section.removeEventListener("wheel", onWheel);
-    };
-  }, [scrollToCard]);
-
-  // ── Desktop Click & Drag Handling ────────────────────────────────────────────
-  const handleMouseDown = (e: React.MouseEvent) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    isDraggingRef.current = true;
-    hasMovedRef.current = false;
-    startXRef.current = e.pageX - el.offsetLeft;
-    scrollLeftRef.current = el.scrollLeft;
-    el.style.scrollBehavior = "auto";
-    el.style.scrollSnapType = "none"; // Temporarily suspend snap during active drag
-    el.style.cursor = "grabbing";
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDraggingRef.current) return;
-    const el = scrollerRef.current;
-    if (!el) return;
-
-    const x = e.pageX - el.offsetLeft;
-    const walk = (x - startXRef.current) * 1.2;
-    if (Math.abs(walk) > 5) {
-      hasMovedRef.current = true;
-    }
-    el.scrollLeft = scrollLeftRef.current - walk;
-  };
-
-  const handleMouseUpOrLeave = () => {
-    if (!isDraggingRef.current) return;
-    const el = scrollerRef.current;
-    isDraggingRef.current = false;
-    if (!el) return;
-
-    el.style.scrollBehavior = "smooth";
-    el.style.scrollSnapType = "x mandatory"; // Restore snap
-    el.style.cursor = "grab";
-  };
-
-  // Prevent drag movement from accidentally opening links
-  const handleClickCapture = (e: React.MouseEvent) => {
-    if (hasMovedRef.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      hasMovedRef.current = false;
-    }
-  };
-
-  // ── Horizontal Scrub-based Parallax with GSAP ScrollTrigger ──────────────────
+  // ── Pinned Horizontal Scroll with GSAP & Lenis ───────────────────────────────
   useGSAP(
     () => {
-      const scrollerEl = scrollerRef.current;
-      if (!scrollerEl) return;
+      const section = sectionRef.current;
+      const track = trackRef.current;
+      if (!section || !track) return;
 
       gsap.registerPlugin(ScrollTrigger);
       const mm = gsap.matchMedia();
 
-      // Only enable parallax on desktop (>=1024px) without reduced motion to guarantee 60fps touch on mobile
-      mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-        const cards = Array.from(scrollerEl.querySelectorAll<HTMLElement>("[data-project-card]"));
-        const triggers: ScrollTrigger[] = [];
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Distance needed to travel so Card (N-1) is centered
+        const getDistance = () => {
+          return track.scrollWidth - window.innerWidth;
+        };
 
+        const horizontalTween = gsap.to(track, {
+          x: () => -getDistance(),
+          ease: "none",
+        });
+
+        const st = ScrollTrigger.create({
+          trigger: section,
+          start: () => {
+            const bar = barRef.current;
+            if (!bar || window.innerWidth < 640) return "top top"; // phone unchanged
+            const barBottom =
+              bar.getBoundingClientRect().bottom - section.getBoundingClientRect().top;
+            const offset = Math.round(barBottom - window.innerHeight);
+            return offset >= 0 ? `top top-=${offset}` : `top top+=${-offset}`;
+          },
+          end: () => "+=" + getDistance(),
+          pin: true,
+          animation: horizontalTween,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            setScrollProgress(progress);
+            const activeIdx = Math.min(
+              PROJECTS.length - 1,
+              Math.max(0, Math.round(progress * (PROJECTS.length - 1)))
+            );
+            setCurrentIndex(activeIdx);
+            setCanScrollPrev(activeIdx > 0);
+            setCanScrollNext(activeIdx < PROJECTS.length - 1);
+          },
+        });
+
+        scrollTriggerRef.current = st;
+
+        // Container-animation driven parallax for cards (desktop >= 1024px)
+        const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-project-card]"));
         cards.forEach((card) => {
           const primaryImg = card.querySelector<HTMLElement>("[data-parallax='primary']");
           const secondaryImg = card.querySelector<HTMLElement>("[data-parallax='secondary']");
-          const textCol = card.querySelector<HTMLElement>("[data-parallax='text']");
+          const numberEl = card.querySelector<HTMLElement>("[data-parallax='number']");
+          const titleEl = card.querySelector<HTMLElement>("[data-parallax='title']");
 
           if (primaryImg) {
-            triggers.push(
-              ScrollTrigger.create({
-                trigger: card,
-                scroller: scrollerEl,
-                horizontal: true,
-                start: "left right",
-                end: "right left",
-                scrub: true,
-                animation: gsap.fromTo(
-                  primaryImg,
-                  { xPercent: 16.5 },
-                  { xPercent: -16.5, ease: "none" }
-                ),
-              })
+            gsap.fromTo(
+              primaryImg,
+              { xPercent: 6 },
+              {
+                xPercent: -6,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: horizontalTween,
+                  start: "left right",
+                  end: "right left",
+                  scrub: true,
+                },
+              }
             );
           }
 
           if (secondaryImg) {
-            triggers.push(
-              ScrollTrigger.create({
-                trigger: card,
-                scroller: scrollerEl,
-                horizontal: true,
-                start: "left right",
-                end: "right left",
-                scrub: true,
-                animation: gsap.fromTo(
-                  secondaryImg,
-                  { xPercent: 31.5 },
-                  { xPercent: -31.5, ease: "none" }
-                ),
-              })
+            gsap.fromTo(
+              secondaryImg,
+              { xPercent: 14 },
+              {
+                xPercent: -14,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: horizontalTween,
+                  start: "left right",
+                  end: "right left",
+                  scrub: true,
+                },
+              }
             );
           }
 
-          if (textCol) {
-            triggers.push(
-              ScrollTrigger.create({
-                trigger: card,
-                scroller: scrollerEl,
-                horizontal: true,
-                start: "left right",
-                end: "right left",
-                scrub: true,
-                animation: gsap.fromTo(
-                  textCol,
-                  { xPercent: 3 },
-                  { xPercent: -3, ease: "none" }
-                ),
-              })
+          if (numberEl) {
+            gsap.fromTo(
+              numberEl,
+              { xPercent: -15 },
+              {
+                xPercent: 15,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: horizontalTween,
+                  start: "left right",
+                  end: "right left",
+                  scrub: true,
+                },
+              }
+            );
+          }
+
+          if (titleEl) {
+            gsap.fromTo(
+              titleEl,
+              { xPercent: 4 },
+              {
+                xPercent: -4,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: horizontalTween,
+                  start: "left right",
+                  end: "right left",
+                  scrub: true,
+                },
+              }
             );
           }
         });
 
-        return () => {
-          triggers.forEach((t) => t.kill());
-        };
+        // Recalculate ScrollTrigger measurements with exact card content heights
+        ScrollTrigger.refresh();
       });
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        setScrollProgress(0);
+        setCurrentIndex(0);
+        setCanScrollPrev(false);
+        setCanScrollNext(true);
+      });
+
+      return () => {
+        if (scrollTriggerRef.current) {
+          scrollTriggerRef.current.kill();
+          scrollTriggerRef.current = null;
+        }
+      };
     },
     { scope: sectionRef }
   );
@@ -442,15 +441,15 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
       id="projects"
       data-theme={theme}
       aria-label="Selected work and featured projects"
-      className="theme-transition min-h-screen py-28 sm:py-32 flex flex-col justify-center border-t overflow-hidden"
+      className="theme-transition relative w-full min-h-screen py-10 sm:py-14 flex flex-col justify-center border-t overflow-hidden"
       style={{
         background: "var(--canvas)",
         borderColor: "var(--border)",
       }}
     >
-      <div className="max-w-7xl mx-auto w-full px-6 sm:px-8">
+      <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 shrink-0">
         {/* ── Section Header Row: Badge, Title & Navigation Controls ───────── */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-6 sm:mb-8">
           <div>
             <h2
               className="ml-12 text-3xl sm:text-4xl lg:text-5xl font-medium font-display tracking-tight mt-1"
@@ -542,37 +541,22 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          NATIVE HORIZONTAL SCROLL CONTAINER
-          - overflow-x: auto with scroll-snap
-          - Does NOT hijack vertical wheel (page scrolls past vertically)
-          - touch-action: pan-y (vertical swipe scrolls page; horizontal swipe scrolls cards)
-          - data-lenis-prevent so smooth scroll handles page scroll without interfering
-          - Keyboard operable with left/right arrow keys
-          - Desktop click-and-drag enabled
+          HORIZONTAL CARDS VIEWPORT
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <div
-        ref={scrollerRef}
-        role="region"
-        tabIndex={0}
-        aria-label="Projects carousel scroller. Use left and right arrow keys to navigate."
-        onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
-        onClickCapture={handleClickCapture}
-        className="w-full overflow-x-auto overflow-y-hidden cursor-grab active:cursor-grabbing focus-ring outline-none select-none scrollbar-none"
-        style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-          touchAction: "pan-y",
-        }}
-      >
-        <div className="flex gap-6 sm:gap-8 px-6 sm:px-8 max-w-none w-max py-4">
+      <div className="relative w-full overflow-hidden py-3 sm:py-5">
+        <div
+          ref={trackRef}
+          className="flex gap-6 sm:gap-8 lg:gap-10 items-stretch will-change-transform"
+          style={{
+            paddingLeft: "max(1.5rem, calc((100vw - min(76vw, 1100px)) / 2))",
+            paddingRight: "max(1.5rem, calc((100vw - min(76vw, 1100px)) / 2))",
+          }}
+        >
           {PROJECTS.map((project, index) => (
             <ProjectCard
               key={project.id}
               project={project}
+              index={index}
               priority={index === 0}
             />
           ))}
@@ -580,7 +564,7 @@ export function ProjectsSection({ theme = "light" }: ProjectsSectionProps) {
       </div>
 
       {/* ── Scroller Progress Indicator Bar ──────────────────────────────── */}
-      <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 mt-6">
+      <div ref={barRef} className="max-w-7xl mx-auto w-full px-6 sm:px-8 mt-5 sm:mt-7 shrink-0">
         <div
           className="relative h-1 w-full rounded-full overflow-hidden"
           style={{ background: "var(--border)" }}

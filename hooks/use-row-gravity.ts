@@ -34,7 +34,7 @@ export function useRowGravity(gridRef: React.RefObject<HTMLElement | null>) {
       },
       (ctx) => {
         const { reduce } = ctx.conditions as { reduce: boolean };
-        const icons = gsap.utils.toArray<HTMLElement>("[data-icon]", grid);
+        const icons = gsap.utils.toArray<HTMLElement>("[data-icon], [data-gravity-item]", grid);
         if (icons.length === 0) return;
 
         if (reduce) {
@@ -61,7 +61,16 @@ export function useRowGravity(gridRef: React.RefObject<HTMLElement | null>) {
 
         rows.forEach((row) => {
           const sideOf = new Map<HTMLElement, number>();
-          row.forEach((el, i) => sideOf.set(el, i < row.length / 2 ? -1 : 1));
+          row.forEach((el, i) => {
+            const sideAttr = el.getAttribute("data-side");
+            if (sideAttr === "left") {
+              sideOf.set(el, -1);
+            } else if (sideAttr === "right") {
+              sideOf.set(el, 1);
+            } else {
+              sideOf.set(el, i < row.length / 2 ? -1 : 1);
+            }
+          });
           const side = (el: HTMLElement) => sideOf.get(el) ?? 1;
 
           const x = (_: number, el: HTMLElement) => side(el) * reach();
