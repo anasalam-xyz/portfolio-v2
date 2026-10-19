@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { useLenis } from "@/components/smooth-scroll";
+import { scrollToTarget } from "@/components/smooth-scroll";
 import { useTheme } from "@/hooks/use-theme";
+import { SwitchButton } from "@/components/kokonutui/switch-button";
 
 const NAV_LINKS = [
   { label: "Home", href: "#" },
@@ -29,7 +30,7 @@ export interface NavbarProps {
  * - Safe hover gates for touch devices
  */
 export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
-  const { theme: storeTheme, toggleTheme: storeToggleTheme } = useTheme();
+  const { theme: storeTheme, setTheme, toggleTheme: storeToggleTheme } = useTheme();
   const currentTheme = heroTheme ?? storeTheme;
   const toggleTheme = onToggleHeroTheme ?? storeToggleTheme;
 
@@ -53,7 +54,6 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
 
   const navUlRef = React.useRef<HTMLUListElement>(null);
   const linkRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
-  const lenis = useLenis();
   const isClickScrollingRef = React.useRef(false);
   const clickScrollTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -130,6 +130,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
   // Click handler with scroll lock so underline doesn't jitter while animating
   const handleNavClick = React.useCallback(
     (href: string, e: React.MouseEvent) => {
+      e.preventDefault();
       setActiveHref(href);
       isClickScrollingRef.current = true;
       if (clickScrollTimeoutRef.current) {
@@ -137,18 +138,11 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
       }
       clickScrollTimeoutRef.current = setTimeout(() => {
         isClickScrollingRef.current = false;
-      }, 1000);
+      }, 1300);
 
-      if (lenis && href.startsWith("#")) {
-        e.preventDefault();
-        if (href === "#") {
-          lenis.scrollTo(0);
-        } else {
-          lenis.scrollTo(href);
-        }
-      }
+      scrollToTarget(href);
     },
-    [lenis]
+    []
   );
 
   // Scroll spy to sync activeHref across all 5 sections: Home, About, Work, Art, Contact
@@ -298,44 +292,27 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
 
         {/* ── Right Controls: Theme Toggle + "Let's Talk" CTA ───────── */}
         <div className="flex items-center gap-2">
-          {/* Theme switch button with 44x44px accessible touch area */}
-          <button
-            type="button"
-            onClick={toggleTheme}
+          {/* Kokonut UI Theme Switch Button */}
+          <SwitchButton
+            theme={currentTheme}
+            onThemeChange={(newTheme) => {
+              if (onToggleHeroTheme && newTheme !== currentTheme) {
+                onToggleHeroTheme();
+              } else {
+                setTheme(newTheme);
+              }
+            }}
+            showLabel={false}
+            size="sm"
             aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
             title={isLight ? "Switch to dark mode" : "Switch to light mode"}
-            className="pressable focus-ring theme-transition flex h-11 w-11 items-center justify-center rounded-full opacity-80 hover:opacity-100"
-            style={{ color: themeStyles.textPrimary }}
-          >
-            <span
-              className="theme-transition flex h-8 w-8 items-center justify-center rounded-full shadow-2xs"
-              style={{
-                background: themeStyles.logoBg,
-                border: `1px solid ${themeStyles.logoBorder}`,
-                color: themeStyles.textPrimary,
-              }}
-            >
-              {isLight ? (
-                /* Moon icon: indicates clicking will switch to dark */
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-              ) : (
-                /* Sun icon: indicates clicking will switch to light */
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              )}
-            </span>
-          </button>
+            className="rounded-full border transition-transform hover:scale-105 active:scale-95 shadow-2xs focus-ring"
+            style={{
+              background: themeStyles.logoBg,
+              borderColor: themeStyles.logoBorder,
+              color: themeStyles.textPrimary,
+            }}
+          />
 
           {/* Adaptive CTA button */}
           <a

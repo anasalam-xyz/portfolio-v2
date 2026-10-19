@@ -17,11 +17,11 @@ export type Project = {
   techStack: string[];           // rendered as chips, in display order
   liveUrl?: string;              // hide the button if absent
   repoUrl?: string;              // hide the button if absent
-  thumbnail: ProjectImage;       // fallback main image
-  secondaryImage?: ProjectImage; // optional
+  thumbnail: ProjectImage;       // primary image (photo 1)
+  secondaryImage: ProjectImage;  // secondary image (photo 2)
   category?: string;             // optional editorial category
   year?: string;                 // optional release/development year
-  images?: ProjectImage[];       // screenshots array
+  images?: [ProjectImage, ProjectImage] | ProjectImage[]; // screenshots tuple
 };
 
 export type Projects = Project[];
@@ -36,13 +36,12 @@ const DARK_ESPRESSO_BLUR =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMCAxMCc+PHJlY3Qgd2lkdGg9JzEwJyBoZWlnaHQ9JzEwJyBmaWxsPScjMTIxMDBlJy8+PC9zdmc+";
 
 export function ProjectCard({ project, index, priority = false }: ProjectCardProps) {
-  const { title, description, techStack, liveUrl, repoUrl, category, year, thumbnail, secondaryImage } = project;
+  const { title, description, techStack, liveUrl, repoUrl, thumbnail, secondaryImage } = project;
   const numberStr = String(index + 1).padStart(2, "0");
-  const metaText = [category, year].filter(Boolean).join(" · ");
 
-  // Exactly two photos: primary (thumbnail) and secondary (secondaryImage || images?.[1])
-  const img1 = thumbnail || (project.images && project.images[0]);
-  const img2 = secondaryImage || (project.images && project.images.length > 1 ? project.images[1] : undefined);
+  // Exactly two photos: primary (thumbnail) and secondary (secondaryImage)
+  const img1 = thumbnail || project.images?.[0];
+  const img2 = secondaryImage || project.images?.[1];
 
   return (
     <article
@@ -63,51 +62,10 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
         className="relative w-full h-[180px] sm:h-[220px] lg:h-[260px] shrink-0 overflow-hidden bg-[var(--surface-elevated)] border-b"
         style={{ borderColor: "var(--border)" }}
       >
-        {img2 ? (
-          // Two photos side-by-side with parallax
-          <div className="shadow-lg flex gap-1 h-full w-full items-center">
-            {/* Photo 1 (Primary): slightly wider frame */}
-            <div className="relative h-full flex-[1.2] lg:flex-[1.25] overflow-hidden bg-[var(--surface)]">
-              <div
-                data-parallax="primary"
-                className="relative h-full w-[120%] -left-[10%] will-change-transform"
-              >
-                <Image
-                  src={img1.src}
-                  alt={img1.alt}
-                  fill
-                  priority={priority}
-                  loading={priority ? "eager" : "lazy"}
-                  sizes="(min-width: 1024px) 45vw, 60vw"
-                  placeholder="blur"
-                  blurDataURL={DARK_ESPRESSO_BLUR}
-                  className="object-cover object-top select-none pointer-events-none"
-                />
-              </div>
-            </div>
-
-            {/* Photo 2 (Secondary): complementary frame */}
-            <div className="relative h-full flex-1 overflow-hidden bg-[var(--surface)]">
-              <div
-                data-parallax="secondary"
-                className="relative h-full w-[130%] -left-[15%] will-change-transform"
-              >
-                <Image
-                  src={img2.src}
-                  alt={img2.alt}
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 1024px) 35vw, 40vw"
-                  placeholder="blur"
-                  blurDataURL={DARK_ESPRESSO_BLUR}
-                  className="object-cover object-top select-none pointer-events-none"
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          // Single photo fallback: fills 100% width with no gap
-          <div className="relative h-full w-full overflow-hidden bg-[var(--surface)]">
+        {/* Two photos side-by-side with parallax */}
+        <div className="shadow-lg flex gap-1 h-full w-full items-center">
+          {/* Photo 1 (Primary): slightly wider frame */}
+          <div className="relative h-full flex-[1.2] lg:flex-[1.25] overflow-hidden bg-[var(--surface)]">
             <div
               data-parallax="primary"
               className="relative h-full w-[120%] -left-[10%] will-change-transform"
@@ -118,14 +76,33 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
                 fill
                 priority={priority}
                 loading={priority ? "eager" : "lazy"}
-                sizes="(min-width: 1024px) 76vw, 88vw"
+                sizes="(min-width: 1024px) 45vw, 60vw"
                 placeholder="blur"
                 blurDataURL={DARK_ESPRESSO_BLUR}
                 className="object-cover object-top select-none pointer-events-none"
               />
             </div>
           </div>
-        )}
+
+          {/* Photo 2 (Secondary): complementary frame */}
+          <div className="relative h-full flex-1 overflow-hidden bg-[var(--surface)]">
+            <div
+              data-parallax="secondary"
+              className="relative h-full w-[130%] -left-[15%] will-change-transform"
+            >
+              <Image
+                src={img2.src}
+                alt={img2.alt}
+                fill
+                loading="lazy"
+                sizes="(min-width: 1024px) 35vw, 40vw"
+                placeholder="blur"
+                blurDataURL={DARK_ESPRESSO_BLUR}
+                className="object-cover object-top select-none pointer-events-none"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -158,15 +135,6 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
 
         {/* Content Section */}
         <div className="relative z-10 space-y-1.5 sm:space-y-2.5">
-          {metaText && (
-            <p
-              className="font-mono text-xs uppercase tracking-wider"
-              style={{ color: "var(--muted)" }}
-            >
-              {metaText}
-            </p>
-          )}
-
           {/* Project Title (Display Serif) */}
           <div data-parallax="title" className="will-change-transform">
             <h3

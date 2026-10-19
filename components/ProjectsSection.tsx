@@ -10,16 +10,15 @@ import { useRef } from "react";
 
 export type { ProjectImage, Project, Projects } from "@/components/ProjectCard";
 
-// ─── Multiple-Entry Project Data (Local to ProjectsSection) ───────────────────
-// Note on images: Dedicated screenshots for Blog API and Co-op Platformer are
-// currently pending; using verified RoundOne/WorkNest high-res assets as fallback.
+// ─── Featured Projects Data ───────────────────────────────────────────────────
+// 5 Featured Projects: RoundOne, Digital Twin, WorkNest, Small MBTI, Blog API
 export const PROJECTS: Projects = [
   {
     id: "roundone",
     title: "RoundOne",
     description:
-      "An AI mock interview platform that conducts voice-driven technical interviews, asks adaptive follow-up questions, and scores answers with granular feedback.",
-    techStack: ["Next.js 15", "TypeScript", "PostgreSQL", "Groq API", "Tailwind CSS"],
+      "An AI mock interview platform that conducts interviews and asks adaptive follow-up questions.",
+    techStack: ["Next.js", "TypeScript", "PostgreSQL", "Gemini API", "Tailwind CSS"],
     category: "AI Interview Platform",
     year: "2025",
     liveUrl: "https://getroundone.vercel.app/",
@@ -31,8 +30,8 @@ export const PROJECTS: Projects = [
       height: 1200,
     },
     secondaryImage: {
-      src: "/images/projects/roundone/interview.png",
-      alt: "RoundOne live adaptive interview session",
+      src: "/images/projects/roundone/dashboard.png",
+      alt: "RoundOne candidate analytics dashboard",
       width: 1920,
       height: 1200,
     },
@@ -44,22 +43,47 @@ export const PROJECTS: Projects = [
         height: 1200,
       },
       {
-        src: "/images/projects/roundone/interview.png",
-        alt: "RoundOne live adaptive interview session",
-        width: 1920,
-        height: 1200,
-      },
-      {
         src: "/images/projects/roundone/dashboard.png",
         alt: "RoundOne candidate analytics dashboard",
         width: 1920,
         height: 1200,
       },
+    ],
+  },
+  {
+    id: "digital-twin",
+    title: "Digital Twin",
+    description:
+      "An interactive climate simulation dashboard predicting regional climate variations.",
+    techStack: ["Next.js", "TypeScript", "Python", "FastAPI", "Leaflet", "Tailwind CSS"],
+    category: "Climate Simulation",
+    year: "2025",
+    liveUrl: "https://digitaltwin-in.vercel.app",
+    repoUrl: "https://github.com/anasalam-xyz/digital-twin",
+    thumbnail: {
+      src: "/images/projects/digital-twin/home.png",
+      alt: "Digital Twin India climate simulation dashboard overview",
+      width: 1884,
+      height: 1069,
+    },
+    secondaryImage: {
+      src: "/images/projects/digital-twin/map-view.png",
+      alt: "Digital Twin India interactive geospatial map visualization",
+      width: 1918,
+      height: 1084,
+    },
+    images: [
       {
-        src: "/images/projects/roundone/result.png",
-        alt: "RoundOne technical performance evaluation report",
-        width: 1920,
-        height: 1200,
+        src: "/images/projects/digital-twin/home.png",
+        alt: "Digital Twin India climate simulation dashboard overview",
+        width: 1884,
+        height: 1069,
+      },
+      {
+        src: "/images/projects/digital-twin/map-view.png",
+        alt: "Digital Twin India interactive geospatial map visualization",
+        width: 1918,
+        height: 1084,
       },
     ],
   },
@@ -67,7 +91,7 @@ export const PROJECTS: Projects = [
     id: "worknest",
     title: "WorkNest",
     description:
-      "A collaborative workspace and team task management platform with role-based JWT authentication, task lifecycle workflows, and 10+ REST endpoints.",
+      "A collaborative workspace and team task management platform with role-based JWT auth.",
     techStack: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
     category: "Collaborative Workspace",
     year: "2024",
@@ -80,8 +104,8 @@ export const PROJECTS: Projects = [
       height: 1200,
     },
     secondaryImage: {
-      src: "/images/projects/worknest/project.png",
-      alt: "WorkNest task management and project board",
+      src: "/images/projects/worknest/login.png",
+      alt: "WorkNest authentication and workspace access",
       width: 1920,
       height: 1200,
     },
@@ -93,22 +117,47 @@ export const PROJECTS: Projects = [
         height: 1200,
       },
       {
-        src: "/images/projects/worknest/project.png",
-        alt: "WorkNest task management and project board",
-        width: 1920,
-        height: 1200,
-      },
-      {
         src: "/images/projects/worknest/login.png",
         alt: "WorkNest authentication and workspace access",
         width: 1920,
         height: 1200,
       },
+    ],
+  },
+  {
+    id: "small-mbti",
+    title: "Small MBTI",
+    description:
+      "An interactive personality assessment platform that calculates Myers-Briggs archetypes.",
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+    category: "Personality Assessment",
+    year: "2024",
+    liveUrl: "https://small-mbti.vercel.app",
+    repoUrl: "https://github.com/anasalam-xyz/small-mbti",
+    thumbnail: {
+      src: "/images/projects/small-mbti/test.png",
+      alt: "Small MBTI interactive personality assessment question flow",
+      width: 1912,
+      height: 1081,
+    },
+    secondaryImage: {
+      src: "/images/projects/small-mbti/result.jpg",
+      alt: "Small MBTI personality archetype analysis result",
+      width: 1316,
+      height: 610,
+    },
+    images: [
       {
-        src: "/images/projects/worknest/dashboard.png",
-        alt: "WorkNest collaborative sprint board overview",
-        width: 1920,
-        height: 1200,
+        src: "/images/projects/small-mbti/test.png",
+        alt: "Small MBTI interactive personality assessment question flow",
+        width: 1912,
+        height: 1081,
+      },
+      {
+        src: "/images/projects/small-mbti/result.jpg",
+        alt: "Small MBTI personality archetype analysis result",
+        width: 1316,
+        height: 610,
       },
     ],
   },
@@ -116,94 +165,35 @@ export const PROJECTS: Projects = [
     id: "blog-api",
     title: "Blog API",
     description:
-      "An asynchronous RESTful backend service built to learn modern Python backend architecture, featuring async SQLAlchemy 2.0 and JWT auth on Neon PostgreSQL.",
-    techStack: ["FastAPI", "Python", "SQLAlchemy", "PostgreSQL", "JWT", "Pydantic"],
+      "An asynchronous RESTful backend service built to learn modern Python backend architecture.",
+    techStack: ["FastAPI", "Python", "SQLAlchemy", "PostgreSQL", "Pydantic"],
     category: "Backend API Service",
     year: "2024",
     repoUrl: "https://github.com/anasalam-xyz/blog-api",
     thumbnail: {
-      src: "/images/projects/roundone/auth.png",
-      alt: "Blog API authentication and architecture documentation",
-      width: 1920,
-      height: 1200,
+      src: "/images/projects/blog-api/demo.png",
+      alt: "Blog API interactive documentation and live endpoint demo",
+      width: 1794,
+      height: 1000,
     },
     secondaryImage: {
-      src: "/images/projects/roundone/dashboard.png",
-      alt: "Blog API schema and endpoint explorer",
-      width: 1920,
-      height: 1200,
+      src: "/images/projects/blog-api/endpoints.png",
+      alt: "Blog API OpenAPI schema and route specifications",
+      width: 1918,
+      height: 1083,
     },
     images: [
       {
-        src: "/images/projects/roundone/auth.png",
-        alt: "Blog API authentication and architecture documentation",
-        width: 1920,
-        height: 1200,
+        src: "/images/projects/blog-api/demo.png",
+        alt: "Blog API interactive documentation and live endpoint demo",
+        width: 1794,
+        height: 1000,
       },
       {
-        src: "/images/projects/roundone/dashboard.png",
-        alt: "Blog API schema and endpoint explorer",
-        width: 1920,
-        height: 1200,
-      },
-      {
-        src: "/images/projects/roundone/landing.png",
-        alt: "Blog API documentation and route specification",
-        width: 1920,
-        height: 1200,
-      },
-      {
-        src: "/images/projects/roundone/result.png",
-        alt: "Blog API automated test suite results",
-        width: 1920,
-        height: 1200,
-      },
-    ],
-  },
-  {
-    id: "coop-platformer",
-    title: "Co-op Platformer",
-    description:
-      "A two-player browser platformer built around real-time communication where both players share one level but collide with different versions of it.",
-    techStack: ["TypeScript", "Phaser 3", "Node.js", "WebSockets"],
-    category: "Multiplayer Web Game",
-    year: "2024",
-    thumbnail: {
-      src: "/images/projects/roundone/result.png",
-      alt: "Co-op Platformer gameplay mechanics and synchronization view",
-      width: 1920,
-      height: 1200,
-    },
-    secondaryImage: {
-      src: "/images/projects/worknest/login.png",
-      alt: "Co-op Platformer level overview and lobby interface",
-      width: 1920,
-      height: 1200,
-    },
-    images: [
-      {
-        src: "/images/projects/roundone/result.png",
-        alt: "Co-op Platformer gameplay mechanics and synchronization view",
-        width: 1920,
-        height: 1200,
-      },
-      {
-        src: "/images/projects/worknest/login.png",
-        alt: "Co-op Platformer level overview and lobby interface",
-        width: 1920,
-        height: 1200,
-      },
-      {
-        src: "/images/projects/worknest/project.png",
-        alt: "Co-op Platformer multiplayer session and physics state",
-        width: 1920,
-        height: 1200,
-      },
-      {
-        src: "/images/projects/roundone/landing.png",
-        alt: "Co-op Platformer title screen and player matchmaking",
-        width: 1920,
-        height: 1200,
+        src: "/images/projects/blog-api/endpoints.png",
+        alt: "Blog API OpenAPI schema and route specifications",
+        width: 1918,
+        height: 1083,
       },
     ],
   },

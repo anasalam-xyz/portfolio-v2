@@ -22,7 +22,7 @@ import * as React from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { useLenis } from "@/components/smooth-scroll";
+import { useLenis, scrollToTarget } from "@/components/smooth-scroll";
 
 // DEV-ONLY: Set to true to test the form error state and mailto fallback in browser.
 // REMOVE OR SET TO FALSE FOR NORMAL/SUCCESS SUBMISSIONS.
@@ -41,7 +41,7 @@ interface FooterNavColumn {
 }
 
 interface FooterSocialLink {
-  name: "LinkedIn" | "Twitter/X" | "Instagram";
+  name: "LinkedIn" | "X" | "Instagram";
   href: string;
   ariaLabel: string;
 }
@@ -66,7 +66,7 @@ const FOOTER_CONTENT = {
       links: [
         { label: "GitHub", href: "https://github.com/anasalam-xyz", external: true },
         { label: "LinkedIn", href: "https://linkedin.com/in/anasalam-xyz", external: true },
-        { label: "Twitter / X", href: "https://x.com/anasalam_xyz", external: true },
+        { label: "Twitter / X", href: "https://x.com/anasalam_", external: true },
       ],
     },
     {
@@ -85,8 +85,8 @@ const FOOTER_CONTENT = {
       ariaLabel: "Visit Anas Alam's LinkedIn profile",
     },
     {
-      name: "Twitter/X",
-      href: "https://x.com/anasalam_xyz",
+      name: "X",
+      href: "https://x.com/anasalam_",
       ariaLabel: "Visit Anas Alam's Twitter / X profile",
     },
     {
@@ -159,11 +159,7 @@ export function Footer() {
   // Back to top scroll handler
   const handleBackToTop = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (lenis) {
-      lenis.scrollTo(0, { duration: 1.2 });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    scrollToTarget(0);
   };
 
   // Stubbed submit handler simulating network delay and resolving UI states
@@ -316,6 +312,12 @@ export function Footer() {
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
                             className="text-[#A3978B] hover:text-[#F4EFEA] transition-colors inline-flex items-center gap-1 focus-ring rounded-xs"
+                            onClick={(e) => {
+                              if (!link.external && link.href.startsWith("#")) {
+                                e.preventDefault();
+                                scrollToTarget(link.href);
+                              }
+                            }}
                           >
                             <span>{link.label}</span>
                             {link.external && <span className="text-[10px]">↗</span>}
@@ -565,7 +567,7 @@ export function Footer() {
                               <circle cx="4" cy="4" r="2" />
                             </svg>
                           )}
-                          {social.name === "Twitter/X" && (
+                          {social.name === "X" && (
                             <svg
                               width="14"
                               height="14"

@@ -35,6 +35,69 @@ export function useLenis(): Lenis | null {
   return contextLenis ?? storeLenis;
 }
 
+/**
+ * Universal smooth scroll to an element ID, hash, or scroll pixel offset.
+ * Handles pinned ScrollTrigger sections (e.g. #projects) by resolving
+ * either ScrollTrigger.start or the surrounding .pin-spacer offset.
+ */
+export function scrollToTarget(
+  target: string | number,
+  options?: { duration?: number; offset?: number }
+) {
+  if (typeof window === "undefined") return;
+
+  const duration = options?.duration ?? 1.2;
+  const easing = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
+
+  let targetScroll = 0;
+  if (typeof target === "number") {
+    targetScroll = target;
+  } else if (target === "#" || target === "" || target === "#home") {
+    targetScroll = 0;
+  } else if (target === "#projects") {
+    const el = document.getElementById("projects");
+    if (el) {
+      let stStart: number | undefined;
+      try {
+        const st = ScrollTrigger.getAll().find((s) => s.trigger === el);
+        if (st && typeof st.start === "number") {
+          stStart = st.start;
+        }
+      } catch {
+        // fallback
+      }
+      if (typeof stStart === "number") {
+        targetScroll = stStart;
+      } else {
+        const pinSpacer = el.closest(".pin-spacer") as HTMLElement | null;
+        targetScroll = (pinSpacer || el).getBoundingClientRect().top + window.scrollY;
+      }
+    }
+  } else {
+    const id = target.startsWith("#") ? target.slice(1) : target;
+    const el = document.getElementById(id);
+    if (el) {
+      targetScroll = el.getBoundingClientRect().top + window.scrollY;
+    }
+  }
+
+  if (options?.offset) {
+    targetScroll += options.offset;
+  }
+
+  if (activeLenis) {
+    activeLenis.scrollTo(targetScroll, {
+      duration,
+      easing,
+    });
+  } else {
+    window.scrollTo({
+      top: targetScroll,
+      behavior: "smooth",
+    });
+  }
+}
+
 export interface SmoothScrollProps {
   children: React.ReactNode;
 }

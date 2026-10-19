@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useBentoScatter } from "@/hooks/use-bento-scatter";
+import { scrollToTarget } from "@/components/smooth-scroll";
 // Register plugins once at module level per GSAP best practices
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -335,6 +336,10 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           {/* Primary Action: View Projects */}
           <a
             href="#projects"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToTarget("#projects");
+            }}
             className="group pressable focus-ring font-sans inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-sm transition-opacity hover:opacity-95 md:px-7 md:py-3 md:text-sm"
             style={{
               background: "var(--cta-primary-bg)",

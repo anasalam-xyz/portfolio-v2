@@ -56,6 +56,7 @@
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+.dark,
 [data-theme="dark"] {
   /* Roasted Obsidian & Amber Glow (Dark Mode) */
   --canvas: #12100E;          /* Roasted espresso obsidian */

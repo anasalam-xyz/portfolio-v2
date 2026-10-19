@@ -38,6 +38,7 @@ function applyThemeChange(nextTheme: Theme) {
   }
   if (typeof document !== "undefined") {
     document.documentElement.setAttribute("data-theme", currentTheme);
+    document.documentElement.classList.toggle("dark", currentTheme === "dark");
   }
   themeListeners.forEach((listener) => listener());
 }
@@ -47,18 +48,24 @@ function transitionTheme(nextTheme: Theme) {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Fallback to instant switch when View Transitions API is unsupported or prefers-reduced-motion is active
+  const doc =
+    typeof document !== "undefined"
+      ? (document as Document & { activeViewTransition?: unknown })
+      : null;
+
+  // Fallback to instant switch when View Transitions API is unsupported, prefers-reduced-motion is active, or a view transition is already running
   if (
-    typeof document === "undefined" ||
-    !("startViewTransition" in document) ||
-    typeof document.startViewTransition !== "function" ||
-    prefersReduced
+    !doc ||
+    !("startViewTransition" in doc) ||
+    typeof doc.startViewTransition !== "function" ||
+    prefersReduced ||
+    Boolean(doc.activeViewTransition)
   ) {
     applyThemeChange(nextTheme);
     return;
   }
 
-  document.startViewTransition(() => {
+  doc.startViewTransition(() => {
     flushSync(() => {
       applyThemeChange(nextTheme);
     });
@@ -74,6 +81,7 @@ export function useTheme() {
 
   React.useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   const toggleTheme = React.useCallback(() => {
