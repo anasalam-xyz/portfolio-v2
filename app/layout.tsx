@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, DM_Sans, DM_Mono } from "next/font/google";
+import { Instrument_Serif, DM_Sans, Quicksand } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Loader } from "@/components/Loader";
 import { Navbar } from "@/components/Navbar";
@@ -18,10 +18,10 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 });
 
-const dmMono = DM_Mono({
+const quicksand = Quicksand({
   weight: ["400", "500"],
   subsets: ["latin"],
-  variable: "--font-dm-mono",
+  variable: "--font-quicksand",
 });
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${instrumentSerif.variable} ${dmSans.variable} ${dmMono.variable} h-full antialiased`}
+      className={`${instrumentSerif.variable} ${dmSans.variable} ${quicksand.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: loaderGate }} />

@@ -128,7 +128,7 @@
   --font-display: var(--font-instrument-serif), serif;
   --font-sans: var(--font-dm-sans), sans-serif;
   --font-body: var(--font-dm-sans), sans-serif;
-  --font-mono: var(--font-dm-mono), monospace;
+  --font-mono: var(--font-quicksand), monospace;
 }
 
 /* ─── Typography Definitions: NO OTHER FONTS ALLOWED ───────────────────────── */
@@ -137,7 +137,7 @@
   --font-display: var(--font-instrument-serif);
   --font-sans: var(--font-dm-sans);
   --font-body: var(--font-dm-sans);
-  --font-mono: var(--font-dm-mono);
+  --font-mono: var(--font-quicksand);
 }
 
 .font-serif,
@@ -151,13 +151,28 @@
 }
 
 .font-mono {
-  font-family: var(--font-dm-mono), monospace;
+  font-family: var(--font-quicksand), monospace;
 }
 
 /* Browser Surfaces (Craft Floor Rule 15) */
 ::selection {
   background-color: var(--accent);
   color: #FFFFFF;
+}
+
+/* For modern browsers (Chrome 121+, Firefox 64+, Edge 121+, Safari 18.2+) */
+html, .scroll-container {
+  scrollbar-width: none;
+}
+
+/* For WebKit browsers (Chrome, Safari, older Edge/Opera) */
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Internet Explorer and legacy Edge */
+.scroll-container {
+  -ms-overflow-style: none;
 }
 
 body {
