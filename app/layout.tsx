@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans, DM_Mono } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { Loader } from "@/components/Loader";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
@@ -24,10 +25,13 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Anas Alam — Full-Stack Developer",
+  title: "Anas Alam",
   description:
-    "First-year BCA student and full-stack developer building AI-powered web apps with Next.js, TypeScript, and PostgreSQL. Open to remote internships.",
+    "Full-stack developer building AI-powered web apps with Next.js, TypeScript, and PostgreSQL.",
 };
+
+// Runs before first paint: decides whether the loader shows at all.
+const loaderGate = `try{var s=sessionStorage.getItem("loader-seen"),r=matchMedia("(prefers-reduced-motion: reduce)").matches;document.documentElement.classList.add(s||r?"skip-loader":"is-loading")}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,8 +40,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
       className={`${instrumentSerif.variable} ${dmSans.variable} ${dmMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: loaderGate }} />
+        <noscript>
+          <style>{`#loader{display:none}[data-hero-reveal]{visibility:visible!important}[data-hero-reveal="photo"]{clip-path:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <SmoothScroll>
+          <Loader />
           <Navbar />
           {children}
           <Footer />

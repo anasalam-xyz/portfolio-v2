@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import gsap from "gsap";
 import { scrollToTarget } from "@/components/smooth-scroll";
 import { useTheme } from "@/hooks/use-theme";
 import { SwitchButton } from "@/components/kokonutui/switch-button";
@@ -52,6 +53,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
     () => false
   );
 
+  const headerRef = React.useRef<HTMLElement>(null);
   const navUlRef = React.useRef<HTMLUListElement>(null);
   const linkRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
   const isClickScrollingRef = React.useRef(false);
@@ -207,8 +209,60 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
     };
   }, []);
 
+  // ── Entrance Animation synced with loader:reveal ──────────────────────────
+  React.useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.set(header, { autoAlpha: 1, y: 0 });
+    });
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const isSkipLoader = document.documentElement.classList.contains("skip-loader");
+      const speed = isSkipLoader ? 0.6 : 1.0;
+
+      const navTl = gsap.timeline({ paused: true });
+      navTl.fromTo(
+        header,
+        { autoAlpha: 0, y: 12 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.8 * speed,
+          ease: "expo.out",
+          clearProps: "transform,y",
+        },
+        0.25 * speed // Starts after headline starts
+      );
+
+      const playNav = () => {
+        navTl.play();
+      };
+
+      if (isSkipLoader || !document.documentElement.classList.contains("is-loading")) {
+        playNav();
+      } else {
+        window.addEventListener("loader:reveal", playNav, { once: true });
+      }
+
+      return () => {
+        window.removeEventListener("loader:reveal", playNav);
+        navTl.kill();
+      };
+    });
+
+    return () => {
+      mm.revert();
+    };
+  }, []);
+
   return (
     <header
+      ref={headerRef}
+      data-hero-reveal="navbar"
       data-theme={currentTheme}
       className="mx-auto w-fit fixed left-0 right-0 top-4 z-50 flex justify-center px-4 md:top-5"
     >

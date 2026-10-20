@@ -67,15 +67,6 @@ function ArrowRightIcon({ className = "" }: { className?: string }) {
   );
 }
 
-function ArrowUpRightIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
-      <path d="M7 17L17 7" />
-      <path d="M7 7h10v10" />
-    </svg>
-  );
-}
-
 // ─── Sub-Components ──────────────────────────────────────────────────────────
 
 function SocialButton({
@@ -106,7 +97,6 @@ function SocialButton({
   );
 }
 
-
 // ─── Component Props ─────────────────────────────────────────────────────────
 
 export interface HeroSectionProps {
@@ -119,63 +109,180 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
   const sectionRef = React.useRef<HTMLElement>(null);
   const headingAreaRef = React.useRef<HTMLDivElement>(null);
   const photoWrapperRef = React.useRef<HTMLDivElement>(null);
+  const photoClipRef = React.useRef<HTMLDivElement>(null);
   const photoInnerRef = React.useRef<HTMLDivElement>(null);
+  const photoImageTargetRef = React.useRef<HTMLDivElement>(null);
   const socialsRowRef = React.useRef<HTMLDivElement>(null);
   const ctaDockRef = React.useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
+      const section = sectionRef.current;
+      if (!section) return;
+
       const mm = gsap.matchMedia();
 
-      // ── Entrance Animations (Respects prefers-reduced-motion) ───────────────
-      // Uses autoAlpha and xPercent/yPercent so properties NEVER collide with scroll tweens
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(headingAreaRef.current, {
-          autoAlpha: 0,
-          yPercent: 18,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.1,
+      // ── Reduced Motion: Instant reveal with no transforms/transitions ──────
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(section.querySelectorAll("[data-hero-reveal]"), {
+          autoAlpha: 1,
+          y: 0,
+          yPercent: 0,
+          x: 0,
+          xPercent: 0,
+          scale: 1,
+          clearProps: "clipPath",
         });
-
-        // Photo inner rises gracefully (outer wrapper handles layout centering)
-        gsap.from(photoInnerRef.current, {
-          autoAlpha: 0,
-          yPercent: 12,
-          duration: 1.0,
-          ease: "power3.out",
-          delay: 0.25,
-        });
-
-        // Socials row slides in from the left
-        gsap.from(socialsRowRef.current, {
-          autoAlpha: 0,
-          xPercent: -40,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.45,
-        });
-
-        // CTA dock slides in from the right
-        gsap.from(ctaDockRef.current, {
-          autoAlpha: 0,
-          xPercent: 40,
-          duration: 0.8,
-          ease: "power3.out",
-          delay: 0.55,
-        });
+        if (photoClipRef.current) {
+          gsap.set(photoClipRef.current, { clipPath: "inset(0% 0 0 0)" });
+        }
+        if (photoImageTargetRef.current) {
+          gsap.set(photoImageTargetRef.current, { scale: 1, yPercent: 0 });
+        }
       });
 
-      mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(
-          [
-            headingAreaRef.current,
-            photoInnerRef.current,
-            socialsRowRef.current,
+      // ── Standard Entrance Animation Synced with loader:reveal ──────────────
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const isSkipLoader = document.documentElement.classList.contains("skip-loader");
+        const speed = isSkipLoader ? 0.6 : 1.0;
+
+        const masterTl = gsap.timeline({
+          paused: true,
+          onComplete: () => {
+            ScrollTrigger.refresh();
+          },
+        });
+
+        // 1. Headline: masked rise from yPercent 110 to 0, duration 0.9s, ease expo.out
+        const headlineLines = section.querySelectorAll("[data-hero-reveal='headline']");
+        if (headlineLines.length) {
+          masterTl.fromTo(
+            headlineLines,
+            { yPercent: 110, autoAlpha: 1 },
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              duration: 0.9 * speed,
+              ease: "expo.out",
+              stagger: 0.09 * speed,
+              clearProps: "transform,yPercent",
+            },
+            0
+          );
+        }
+
+        // 3. Subtitle: masked rise from yPercent 110 to 0, starting 0.15s after headline
+        const subtitleEls = section.querySelectorAll("[data-hero-reveal='subtitle']");
+        if (subtitleEls.length) {
+          masterTl.fromTo(
+            subtitleEls,
+            { yPercent: 110, autoAlpha: 1 },
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              duration: 0.9 * speed,
+              ease: "expo.out",
+              stagger: 0.09 * speed,
+              clearProps: "transform,yPercent",
+            },
+            0.15 * speed
+          );
+        }
+
+        // 4. Hero photo: wipes upward via clip-path, inner image settles from scale 1.08 / yPercent 4
+        const photoStart = 0.1 * speed;
+        if (photoClipRef.current && photoImageTargetRef.current) {
+          masterTl.fromTo(
+            photoClipRef.current,
+            { clipPath: "inset(100% 0 0 0)", autoAlpha: 1 },
+            {
+              clipPath: "inset(0% 0 0 0)",
+              autoAlpha: 1,
+              duration: 1.1 * speed,
+              ease: "expo.out",
+            },
+            photoStart
+          );
+
+          masterTl.fromTo(
+            photoImageTargetRef.current,
+            { scale: 1.08, yPercent: 4 },
+            {
+              scale: 1,
+              yPercent: 0,
+              duration: 1.1 * speed,
+              ease: "expo.out",
+              clearProps: "transform,scale,yPercent",
+            },
+            photoStart
+          );
+        }
+
+        // 5. Floating elements (social icons): y 32 to 0 and autoAlpha 0 to 1, starting ~0.3s after photo starts
+        const floatingStart = photoStart + 0.3 * speed;
+        const floatingEls = section.querySelectorAll("[data-hero-reveal='floating']");
+        const socialsContainer = section.querySelector("[data-hero-reveal='socials-container']");
+
+        if (socialsContainer) {
+          masterTl.fromTo(
+            socialsContainer,
+            { autoAlpha: 0 },
+            {
+              autoAlpha: 1,
+              duration: 0.8 * speed,
+              ease: "expo.out",
+            },
+            floatingStart
+          );
+        }
+
+        if (floatingEls.length) {
+          masterTl.fromTo(
+            floatingEls,
+            { y: 32, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.8 * speed,
+              ease: "expo.out",
+              stagger: 0.07 * speed,
+              clearProps: "transform,y",
+            },
+            floatingStart
+          );
+        }
+
+        // 6. CTA bar: y 24 to 0 and autoAlpha 0 to 1, last
+        if (ctaDockRef.current) {
+          const ctaStart = 0.75 * speed;
+          masterTl.fromTo(
             ctaDockRef.current,
-          ],
-          { autoAlpha: 1, xPercent: 0, yPercent: 0 }
-        );
+            { y: 24, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.8 * speed,
+              ease: "expo.out",
+              clearProps: "transform,y",
+            },
+            ctaStart
+          );
+        }
+
+        const playEntrance = () => {
+          masterTl.play();
+        };
+
+        if (isSkipLoader || !document.documentElement.classList.contains("is-loading")) {
+          playEntrance();
+        } else {
+          window.addEventListener("loader:reveal", playEntrance, { once: true });
+        }
+
+        return () => {
+          window.removeEventListener("loader:reveal", playEntrance);
+          masterTl.kill();
+        };
       });
     },
     { scope: sectionRef }
@@ -245,19 +352,27 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
           className="flex mt-8 md:mt-10 items-center justify-center text-center font-bold tracking-tight leading-none"
           style={{ fontSize: "clamp(2.5rem, 6.2vw, 4.85rem)" }}
         >
-          <span className="font-sans" style={{ color: "var(--foreground)" }}>
-            hi, <span className="text-accent">anas</span> here.
+          <span className="block overflow-hidden py-1">
+            <span
+              data-hero-reveal="headline"
+              className="inline-block will-change-transform font-sans"
+              style={{ color: "var(--foreground)" }}
+            >
+              hi, <span className="text-accent">anas</span> here.
+            </span>
           </span>
-          
         </h1>
 
         {/* Subtitle in DM Sans (Font size >= 12px) */}
-        <p
-          className="theme-transition font-sans mt-3 text-center text-sm md:text-base font-medium"
-          style={{ color: "var(--muted)" }}
-        >
-          Full-Stack Developer based in Ranchi, India
-        </p>
+        <div className="overflow-hidden mt-3 py-0.5">
+          <p
+            data-hero-reveal="subtitle"
+            className="theme-transition font-sans text-center text-sm md:text-base font-medium inline-block will-change-transform"
+            style={{ color: "var(--muted)" }}
+          >
+            Full-Stack Developer based in Ranchi, India
+          </p>
+        </div>
       </div>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -274,22 +389,31 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
         }}
       >
         <div
-          ref={photoInnerRef}
-          data-tile
-          data-depth="1.3"
-          data-scatter-x="0"
-          className="relative h-full w-full will-change-transform"
+          ref={photoClipRef}
+          data-hero-reveal="photo"
+          className="relative h-full w-full will-change-transform overflow-hidden"
+          style={{ clipPath: "inset(100% 0 0 0)" }}
         >
-          <Image
-            src="/images/profile.png"
-            alt="Portrait of Anas Alam"
-            width={1024}
-            height={1536}
-            priority
-            quality={95}
-            className="h-full w-full object-contain object-bottom"
-            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 58vw, 48vw"
-          />
+          <div
+            ref={photoInnerRef}
+            data-tile
+            data-depth="1.3"
+            data-scatter-x="0"
+            className="relative h-full w-full will-change-transform"
+          >
+            <div ref={photoImageTargetRef} className="h-full w-full will-change-transform">
+              <Image
+                src="/images/profile.png"
+                alt="Portrait of Anas Alam"
+                width={1024}
+                height={1536}
+                priority
+                quality={95}
+                className="h-full w-full object-contain object-bottom"
+                sizes="(max-width: 768px) 90vw, (max-width: 1200px) 58vw, 48vw"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -302,24 +426,29 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
         {/* Socials Row */}
         <div
           ref={socialsRowRef}
+          data-hero-reveal="socials-container"
           className="pointer-events-auto theme-transition inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 shadow-md will-change-transform"
           style={{
             border: "1px solid var(--dock-border)",
           }}
         >
-
           <div className="flex items-center gap-1.5">
             {SOCIAL_LINKS.map(({ name, href, label, isExternal }) => (
-              <SocialButton
+              <div
                 key={name}
-                href={href}
-                label={label}
-                isExternal={isExternal}
+                data-hero-reveal="floating"
+                className="inline-flex will-change-transform"
               >
-                {name === "GitHub" && <GitHubIcon />}
-                {name === "LinkedIn" && <LinkedInIcon />}
-                {name === "Email" && <MailIcon />}
-              </SocialButton>
+                <SocialButton
+                  href={href}
+                  label={label}
+                  isExternal={isExternal}
+                >
+                  {name === "GitHub" && <GitHubIcon />}
+                  {name === "LinkedIn" && <LinkedInIcon />}
+                  {name === "Email" && <MailIcon />}
+                </SocialButton>
+              </div>
             ))}
           </div>
         </div>
@@ -327,6 +456,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
         {/* Floating CTA Dock */}
         <div
           ref={ctaDockRef}
+          data-hero-reveal="cta"
           className="pointer-events-auto theme-transition inline-flex items-center gap-1 rounded-full p-1.5 shadow-xl will-change-transform"
           style={{
             background: "var(--dock-bg)",

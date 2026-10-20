@@ -169,6 +169,64 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#loader {
+  --p: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--espresso, #12100e); /* dark in both themes */
+}
+.loader-name {
+  position: relative;
+  font-size: 5rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.loader-name .base { color: rgba(244, 239, 234, 0.18); }
+.loader-name .fill {
+  position: absolute;
+  inset: 0;
+  color: #f4efea;
+  clip-path: inset(0 calc((1 - var(--p)) * 100%) 0 0);
+}
+.loader-bar {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: rgba(244, 239, 234, 0.08);
+}
+.loader-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #f4efea;
+  transform-origin: left;
+  transform: scaleX(var(--p));
+}
+html.is-loading { overflow: hidden; }
+html.skip-loader #loader { display: none; }
+
+/* ─── Hero Entrance Reveal: Initial Hidden State to Prevent Pre-Animation Flash ── */
+[data-hero-reveal] {
+  visibility: hidden;
+}
+
+[data-hero-reveal="photo"] {
+  clip-path: inset(100% 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-reveal] {
+    visibility: visible !important;
+  }
+  [data-hero-reveal="photo"] {
+    clip-path: inset(0% 0 0 0) !important;
+  }
+}
+
 /* Focus Ring Utility (A11y & Craft Floor) */
 .focus-ring {
   outline: none;
@@ -350,6 +408,5 @@ html.lenis body {
     animation: none !important;
   }
 }
-
 
 

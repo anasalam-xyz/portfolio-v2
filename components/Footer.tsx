@@ -1,21 +1,3 @@
-/*
- * TODO(backend): Implement the contact form backend. Prompt for the coding agent:
- *
- * Replace the stubbed submit handler in this component with a real one.
- * - Use the project's existing framework. If it is Next.js, add a route
- *   handler (e.g. app/api/contact/route.ts) that validates input
- *   server-side (email format, message length limits) and sends the email
- *   through Resend (or Formspree if simpler).
- * - Read keys and the destination email from environment variables, and
- *   list which ones I need to set. Never expose them in client code.
- * - Wire the hidden honeypot field: silently reject submissions where it
- *   is filled.
- * - Add basic rate limiting if it is cheap to do.
- * - Return clear success/error responses that map to the existing
- *   idle/loading/success/error UI states. Keep the mailto fallback on error.
- * - Remove the simulated delay and the dev-only forced-error constant.
- */
-
 "use client";
 
 import * as React from "react";
@@ -23,10 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLenis, scrollToTarget } from "@/components/smooth-scroll";
-
-// DEV-ONLY: Set to true to test the form error state and mailto fallback in browser.
-// REMOVE OR SET TO FALSE FOR NORMAL/SUCCESS SUBMISSIONS.
-const DEV_FORCE_ERROR = false;
 
 interface FooterNavLink {
   label: string;
@@ -114,6 +92,7 @@ export function Footer() {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [copied, setCopied] = React.useState(false);
 
+  
   // Subtle reveal animation on scroll (composite-only, no layout shift)
   useGSAP(
     () => {
@@ -185,15 +164,14 @@ export function Footer() {
     setErrorMessage("");
 
     try {
-      // Simulated delay for UI state demonstration
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, message, _gotcha: honeypot }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.ok) throw new Error(json.error || "send failed");
 
-      // TODO(backend): See top-level comment block for instructions to connect real route handler
-      if (DEV_FORCE_ERROR) {
-        throw new Error("Simulated dev error");
-      }
-
-      // Successful simulated submission
       setStatus("success");
       setEmail("");
       setMessage("");

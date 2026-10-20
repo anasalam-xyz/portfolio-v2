@@ -59,7 +59,7 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
           - Horizontal parallax at slightly different speeds
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div
-        className="relative w-full h-[180px] sm:h-[220px] lg:h-[260px] shrink-0 overflow-hidden bg-[var(--surface-elevated)] border-b"
+        className="relative w-full h-[200px] sm:h-[250px] lg:h-[320px] shrink-0 overflow-hidden bg-[var(--surface-elevated)] border-b"
         style={{ borderColor: "var(--border)" }}
       >
         {/* Two photos side-by-side with parallax */}
@@ -85,7 +85,7 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
           </div>
 
           {/* Photo 2 (Secondary): complementary frame */}
-          <div className="relative h-full flex-1 overflow-hidden bg-[var(--surface)]">
+          <div className="hidden md:block relative h-full flex-1 overflow-hidden bg-[var(--surface)]">
             <div
               data-parallax="secondary"
               className="relative h-full w-[130%] -left-[15%] will-change-transform"
@@ -138,9 +138,8 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
           {/* Project Title (Display Serif) */}
           <div data-parallax="title" className="will-change-transform">
             <h3
-              className="font-display font-medium tracking-tight leading-[0.95]"
+              className="font-display text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-[0.95]"
               style={{
-                fontSize: "clamp(2.25rem, 4.5vw, 4.25rem)",
                 color: "var(--foreground)",
               }}
             >
