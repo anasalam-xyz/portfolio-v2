@@ -2,82 +2,82 @@
 
 :root,
 [data-theme="light"] {
-  /* Warm Corduroy & Deeper Amber Palette (Light Mode - Reference Match) */
-  --canvas: #FAF7F2;          /* Warm linen canvas */
-  --surface: #FFFFFF;         /* Crisp elevated cards */
-  --surface-elevated: #F3ECE2;/* Subtle warm elevation */
-  --foreground: #1C1613;      /* Deep roasted espresso */
-  --muted: #63574A;           /* Warm mineral stone (5.8:1 contrast on canvas) */
-  --accent: #B5611A;          /* Deeper amber (6.0:1 contrast on #FAF7F2 canvas) */
-  --accent-hover: #9C5214;
-  --accent-glow: rgba(181, 97, 26, 0.12);
-  --earth: #B88656;           /* Toasted corduroy camel */
-  --slate-navy: #1E2229;      /* Inner collar deep slate */
-  --espresso: #1C1613;        /* Horn button espresso */
-  --border: rgba(28, 22, 19, 0.09);
-  --border-strong: rgba(28, 22, 19, 0.16);
+  /* Cool Linen & Cobalt Palette (Light Mode) */
+  --canvas: #F4F7FB;          /* Cool paper white */
+  --surface: #FFFFFF;
+  --surface-elevated: #E9EFF8;/* Pale blue-grey elevation */
+  --foreground: #0F1A2B;      /* Deep ink navy */
+  --muted: #4A5B73;           /* Slate blue-grey */
+  --accent: #1F5FD1;          /* Cobalt (about 5.4:1 on canvas) */
+  --accent-hover: #1A4FB0;
+  --accent-glow: rgba(31, 95, 209, 0.12);
+  --earth: #6A8FC4;           /* Mid steel blue (secondary tone) */
+  --slate-navy: #0F1B33;
+  --espresso: #0F1A2B;
+  --border: rgba(15, 26, 43, 0.09);
+  --border-strong: rgba(15, 26, 43, 0.16);
   --pill-bg: rgba(255, 255, 255, 0.90);
-  --pill-border: rgba(28, 22, 19, 0.11);
+  --pill-border: rgba(15, 26, 43, 0.11);
   --dock-bg: rgba(255, 255, 255, 0.90);
-  --dock-border: rgba(28, 22, 19, 0.12);
-  --grid-line: rgba(28, 22, 19, 0.035);
-  --cta-primary-bg: #B5611A;
-  --cta-primary-text: #181715;/* Roasted espresso on amber fill to avoid white text on amber */
+  --dock-border: rgba(15, 26, 43, 0.12);
+  --grid-line: rgba(15, 26, 43, 0.035);
+  --cta-primary-bg: #1F5FD1;
+  --cta-primary-text: #FFFFFF;/* White on cobalt (about 5.8:1) */
   --cta-secondary-bg: #FFFFFF;
-  --cta-secondary-text: #181715;
-  --cta-secondary-border: rgba(28, 22, 19, 0.15);
-  --social-btn-bg: #FFFFFF;   /* White/cream surface in light mode */
-  --social-btn-text: #1C1613;
-  --social-btn-border: rgba(28, 22, 19, 0.12);
+  --cta-secondary-text: #0F1A2B;
+  --cta-secondary-border: rgba(15, 26, 43, 0.15);
+  --social-btn-bg: #FFFFFF;
+  --social-btn-text: #0F1A2B;
+  --social-btn-border: rgba(15, 26, 43, 0.12);
   --tag-pill-bg: transparent;
-  --tag-pill-border: rgba(28, 22, 19, 0.13);
-  --tag-pill-text: #1C1613;
+  --tag-pill-border: rgba(15, 26, 43, 0.13);
+  --tag-pill-text: #0F1A2B;
   --nav-bg: rgba(255, 255, 255, 0.94);
-  --nav-border: rgba(28, 22, 19, 0.12);
-  --nav-text: #1C1613;
-  --nav-link-color: rgba(28, 22, 19, 0.70);
-  --nav-link-hover: #1C1613;
-  --nav-link-hover-bg: rgba(28, 22, 19, 0.06);
-  --nav-cta-bg: #181715;
+  --nav-border: rgba(15, 26, 43, 0.12);
+  --nav-text: #0F1A2B;
+  --nav-link-color: rgba(15, 26, 43, 0.70);
+  --nav-link-hover: #0F1A2B;
+  --nav-link-hover-bg: rgba(15, 26, 43, 0.06);
+  --nav-cta-bg: #0F1A2B;
   --nav-cta-text: #FFFFFF;
-  --nav-logo-bg: rgba(28, 22, 19, 0.06);
-  --nav-logo-text: #1C1613;
-  --nav-logo-border: rgba(28, 22, 19, 0.10);
-  --nav-shadow: 0 8px 24px -4px rgba(28, 22, 19, 0.08), 0 0 0 1px rgba(28, 22, 19, 0.04);
-  --nav-shadow-scrolled: 0 16px 36px -8px rgba(28, 22, 19, 0.12), 0 0 0 1px rgba(28, 22, 19, 0.06);
+  --nav-logo-bg: rgba(15, 26, 43, 0.06);
+  --nav-logo-text: #0F1A2B;
+  --nav-logo-border: rgba(15, 26, 43, 0.10);
+  --nav-shadow: 0 8px 24px -4px rgba(15, 26, 43, 0.08), 0 0 0 1px rgba(15, 26, 43, 0.04);
+  --nav-shadow-scrolled: 0 16px 36px -8px rgba(15, 26, 43, 0.12), 0 0 0 1px rgba(15, 26, 43, 0.06);
   --cta-primary-badge-bg: rgba(0, 0, 0, 0.12);
 
   /* Status / Feedback colors */
   --color-error: #EF4444;
   --color-success: #10B981;
 
-  /* Footer Dark Anchor Tokens (Fixed dark anchor across themes) */
-  --footer-bg: #181715;
-  --footer-text: #F4EFEA;
-  --footer-muted: #A3978B;
-  --footer-border: rgba(244, 239, 234, 0.10);
+  /* Footer Dark Anchor Tokens (fixed dark across themes) */
+  --footer-bg: #0F1A2B;
+  --footer-text: #E8EEF8;
+  --footer-muted: #8FA1BD;
+  --footer-border: rgba(232, 238, 248, 0.10);
 
-  /* Overlay & Lightbox Tokens (Modal dialogs & image hover overlays) */
-  --overlay-backdrop: rgba(18, 16, 14, 0.94);
-  --overlay-bg: #14110F;
+  /* Overlay & Lightbox Tokens */
+  --overlay-backdrop: rgba(8, 13, 24, 0.94);
+  --overlay-bg: #0A101C;
   --overlay-control-bg: rgba(255, 255, 255, 0.08);
   --overlay-control-border: rgba(255, 255, 255, 0.15);
   --overlay-control-hover: rgba(255, 255, 255, 0.12);
   --overlay-text: #FFFFFF;
   --overlay-muted: rgba(255, 255, 255, 0.72);
   --overlay-subtle: rgba(255, 255, 255, 0.35);
-  --caption-gradient: linear-gradient(to top, rgba(18, 16, 14, 0.90) 0%, rgba(18, 16, 14, 0.45) 45%, transparent 100%);
+  --caption-gradient: linear-gradient(to top, rgba(8, 13, 24, 0.90) 0%, rgba(8, 13, 24, 0.45) 45%, transparent 100%);
 
   /* Initial Loader Tokens */
-  --loader-bg: #12100E;
-  --loader-text: #F4EFEA;
-  --loader-muted: rgba(244, 239, 234, 0.18);
-  --loader-track: rgba(244, 239, 234, 0.08);
+  --loader-bg: #0B1220;
+  --loader-text: #E8EEF8;
+  --loader-muted: rgba(232, 238, 248, 0.18);
+  --loader-track: rgba(232, 238, 248, 0.08);
 
-  /* Heatmap Cream to Camel to Espresso Ramp */
-  --heatmap-0: rgba(28, 22, 19, 0.05);
-  --heatmap-1: #EADCCE;
-  --heatmap-2: #D6B595;
+  /* Heatmap: pale blue to cobalt ramp */
+  --heatmap-0: rgba(15, 26, 43, 0.05);
+  --heatmap-1: #DCE8F8;
+  --heatmap-2: #A9C4EA;
   --heatmap-3: var(--earth);
   --heatmap-4: var(--accent);
 
@@ -88,44 +88,44 @@
 
 .dark,
 [data-theme="dark"] {
-  /* Roasted Obsidian & Amber Glow (Dark Mode) */
-  --canvas: #12100E;          /* Roasted espresso obsidian */
-  --surface: #191614;         /* Subtle warm dark surface */
-  --surface-elevated: #231E1B;/* Elevated card background */
-  --foreground: #F4EFEA;      /* Warm cream sand */
-  --muted: #A3978B;           /* Soft toasted oat (6.5:1 contrast) */
-  --accent: #E8953C;          /* Radiant golden-hour amber */
-  --accent-hover: #F4A54F;
-  --accent-glow: rgba(232, 149, 60, 0.22);
-  --earth: #C49261;           /* Luminous camel corduroy */
-  --slate-navy: #252B34;      /* Deep midnight anchor */
-  --espresso: #14110F;
-  --border: rgba(244, 239, 234, 0.08);
-  --border-strong: rgba(244, 239, 234, 0.14);
-  --pill-bg: rgba(25, 22, 20, 0.85);
-  --pill-border: rgba(244, 239, 234, 0.12);
-  --dock-bg: rgba(25, 22, 20, 0.90);
-  --dock-border: rgba(244, 239, 234, 0.14);
-  --grid-line: rgba(244, 239, 234, 0.03);
-  --cta-primary-bg: #E8953C;
-  --cta-primary-text: #12100E;/* Dark roasted obsidian on amber fill */
-  --cta-secondary-bg: #231E1B;
-  --cta-secondary-text: #F4EFEA;
-  --cta-secondary-border: rgba(244, 239, 234, 0.18);
-  --social-btn-bg: #1E1B18;
-  --social-btn-text: #F4EFEA;
-  --social-btn-border: rgba(244, 239, 234, 0.14);
+  /* Midnight Navy & Sky Glow (Dark Mode) */
+  --canvas: #0B1220;          /* Deep midnight navy */
+  --surface: #111A2C;
+  --surface-elevated: #18233A;
+  --foreground: #E8EEF8;      /* Cool off-white */
+  --muted: #9AABC4;           /* Soft steel (about 7:1 on canvas) */
+  --accent: #5B9BFF;          /* Bright sky blue (about 6.8:1 on canvas) */
+  --accent-hover: #7DB1FF;
+  --accent-glow: rgba(91, 155, 255, 0.22);
+  --earth: #7FA3D6;
+  --slate-navy: #1B2740;
+  --espresso: #0A101C;
+  --border: rgba(232, 238, 248, 0.08);
+  --border-strong: rgba(232, 238, 248, 0.14);
+  --pill-bg: rgba(17, 26, 44, 0.85);
+  --pill-border: rgba(232, 238, 248, 0.12);
+  --dock-bg: rgba(17, 26, 44, 0.90);
+  --dock-border: rgba(232, 238, 248, 0.14);
+  --grid-line: rgba(232, 238, 248, 0.03);
+  --cta-primary-bg: #5B9BFF;
+  --cta-primary-text: #0B1220;/* Dark navy on sky blue (about 6.8:1) */
+  --cta-secondary-bg: #18233A;
+  --cta-secondary-text: #E8EEF8;
+  --cta-secondary-border: rgba(232, 238, 248, 0.18);
+  --social-btn-bg: #141E33;
+  --social-btn-text: #E8EEF8;
+  --social-btn-border: rgba(232, 238, 248, 0.14);
   --tag-pill-bg: transparent;
-  --tag-pill-border: rgba(244, 239, 234, 0.14);
-  --tag-pill-text: #F4EFEA;
-  --nav-bg: #181715;
+  --tag-pill-border: rgba(232, 238, 248, 0.14);
+  --tag-pill-text: #E8EEF8;
+  --nav-bg: #0F1729;
   --nav-border: rgba(255, 255, 255, 0.08);
   --nav-text: #FFFFFF;
   --nav-link-color: rgba(255, 255, 255, 0.72);
   --nav-link-hover: #FFFFFF;
   --nav-link-hover-bg: rgba(255, 255, 255, 0.09);
   --nav-cta-bg: #FFFFFF;
-  --nav-cta-text: #181715;
+  --nav-cta-text: #0F1729;
   --nav-logo-bg: rgba(255, 255, 255, 0.08);
   --nav-logo-text: #FFFFFF;
   --nav-logo-border: rgba(255, 255, 255, 0.12);
@@ -138,32 +138,32 @@
   --color-success: #34D399;
 
   /* Footer Dark Anchor Tokens */
-  --footer-bg: #14110F;
-  --footer-text: #F4EFEA;
-  --footer-muted: #A3978B;
-  --footer-border: rgba(244, 239, 234, 0.10);
+  --footer-bg: #0A101C;
+  --footer-text: #E8EEF8;
+  --footer-muted: #8FA1BD;
+  --footer-border: rgba(232, 238, 248, 0.10);
 
   /* Overlay & Lightbox Tokens */
-  --overlay-backdrop: rgba(18, 16, 14, 0.94);
-  --overlay-bg: #14110F;
+  --overlay-backdrop: rgba(8, 13, 24, 0.94);
+  --overlay-bg: #0A101C;
   --overlay-control-bg: rgba(255, 255, 255, 0.08);
   --overlay-control-border: rgba(255, 255, 255, 0.15);
   --overlay-control-hover: rgba(255, 255, 255, 0.12);
   --overlay-text: #FFFFFF;
   --overlay-muted: rgba(255, 255, 255, 0.72);
   --overlay-subtle: rgba(255, 255, 255, 0.35);
-  --caption-gradient: linear-gradient(to top, rgba(18, 16, 14, 0.90) 0%, rgba(18, 16, 14, 0.45) 45%, transparent 100%);
+  --caption-gradient: linear-gradient(to top, rgba(8, 13, 24, 0.90) 0%, rgba(8, 13, 24, 0.45) 45%, transparent 100%);
 
   /* Initial Loader Tokens */
-  --loader-bg: #12100E;
-  --loader-text: #F4EFEA;
-  --loader-muted: rgba(244, 239, 234, 0.18);
-  --loader-track: rgba(244, 239, 234, 0.08);
+  --loader-bg: #0B1220;
+  --loader-text: #E8EEF8;
+  --loader-muted: rgba(232, 238, 248, 0.18);
+  --loader-track: rgba(232, 238, 248, 0.08);
 
-  /* Heatmap Cream to Camel to Espresso Ramp */
-  --heatmap-0: rgba(244, 239, 234, 0.05);
-  --heatmap-1: rgba(196, 146, 97, 0.22);
-  --heatmap-2: rgba(196, 146, 97, 0.50);
+  /* Heatmap */
+  --heatmap-0: rgba(232, 238, 248, 0.05);
+  --heatmap-1: rgba(91, 155, 255, 0.20);
+  --heatmap-2: rgba(91, 155, 255, 0.45);
   --heatmap-3: var(--earth);
   --heatmap-4: var(--accent);
 }
