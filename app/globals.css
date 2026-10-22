@@ -2,83 +2,83 @@
 
 :root,
 [data-theme="light"] {
-  /* Cool Linen & Cobalt Palette (Light Mode) */
-  --canvas: #F4F7FB;          /* Cool paper white */
-  --surface: #FFFFFF;
-  --surface-elevated: #E9EFF8;/* Pale blue-grey elevation */
-  --foreground: #0F1A2B;      /* Deep ink navy */
-  --muted: #4A5B73;           /* Slate blue-grey */
-  --accent: #1F5FD1;          /* Cobalt (about 5.4:1 on canvas) */
-  --accent-hover: #1A4FB0;
-  --accent-glow: rgba(31, 95, 209, 0.12);
-  --earth: #6A8FC4;           /* Mid steel blue (secondary tone) */
-  --slate-navy: #0F1B33;
-  --espresso: #0F1A2B;
-  --border: rgba(15, 26, 43, 0.09);
-  --border-strong: rgba(15, 26, 43, 0.16);
-  --pill-bg: rgba(255, 255, 255, 0.90);
-  --pill-border: rgba(15, 26, 43, 0.11);
-  --dock-bg: rgba(255, 255, 255, 0.90);
-  --dock-border: rgba(15, 26, 43, 0.12);
-  --grid-line: rgba(15, 26, 43, 0.035);
-  --cta-primary-bg: #1F5FD1;
-  --cta-primary-text: #FFFFFF;/* White on cobalt (about 5.8:1) */
-  --cta-secondary-bg: #FFFFFF;
-  --cta-secondary-text: #0F1A2B;
-  --cta-secondary-border: rgba(15, 26, 43, 0.15);
-  --social-btn-bg: #FFFFFF;
-  --social-btn-text: #0F1A2B;
-  --social-btn-border: rgba(15, 26, 43, 0.12);
+  /* Sage & Pine Palette (Light Mode) */
+  --canvas: #E9E7DF;          /* Lightened Dust Grey */
+  --surface: #F7F6F1;
+  --surface-elevated: #DAD7CD;/* Dust Grey */
+  --foreground: #1F2B25;      /* Deep pine ink (about 11:1 on canvas) */
+  --muted: #4F5B50;           /* Moss grey (about 5.7:1 on canvas) */
+  --accent: #3A5A40;          /* Hunter Green (about 6.2:1 on canvas) */
+  --accent-hover: #344E41;    /* Pine Teal */
+  --accent-glow: rgba(58, 90, 64, 0.14);
+  --earth: #A3B18A;           /* Dry Sage (secondary tone) */
+  --slate-navy: #26362D;
+  --espresso: #1F2B25;
+  --border: rgba(31, 43, 37, 0.10);
+  --border-strong: rgba(31, 43, 37, 0.17);
+  --pill-bg: rgba(247, 246, 241, 0.90);
+  --pill-border: rgba(31, 43, 37, 0.12);
+  --dock-bg: rgba(247, 246, 241, 0.90);
+  --dock-border: rgba(31, 43, 37, 0.13);
+  --grid-line: rgba(31, 43, 37, 0.04);
+  --cta-primary-bg: #3A5A40;
+  --cta-primary-text: #FFFFFF;/* White on Hunter Green (about 7.7:1) */
+  --cta-secondary-bg: #F7F6F1;
+  --cta-secondary-text: #1F2B25;
+  --cta-secondary-border: rgba(31, 43, 37, 0.16);
+  --social-btn-bg: #F7F6F1;
+  --social-btn-text: #1F2B25;
+  --social-btn-border: rgba(31, 43, 37, 0.13);
   --tag-pill-bg: transparent;
-  --tag-pill-border: rgba(15, 26, 43, 0.13);
-  --tag-pill-text: #0F1A2B;
-  --nav-bg: rgba(255, 255, 255, 0.94);
-  --nav-border: rgba(15, 26, 43, 0.12);
-  --nav-text: #0F1A2B;
-  --nav-link-color: rgba(15, 26, 43, 0.70);
-  --nav-link-hover: #0F1A2B;
-  --nav-link-hover-bg: rgba(15, 26, 43, 0.06);
-  --nav-cta-bg: #0F1A2B;
-  --nav-cta-text: #FFFFFF;
-  --nav-logo-bg: rgba(15, 26, 43, 0.06);
-  --nav-logo-text: #0F1A2B;
-  --nav-logo-border: rgba(15, 26, 43, 0.10);
-  --nav-shadow: 0 8px 24px -4px rgba(15, 26, 43, 0.08), 0 0 0 1px rgba(15, 26, 43, 0.04);
-  --nav-shadow-scrolled: 0 16px 36px -8px rgba(15, 26, 43, 0.12), 0 0 0 1px rgba(15, 26, 43, 0.06);
-  --cta-primary-badge-bg: rgba(0, 0, 0, 0.12);
+  --tag-pill-border: rgba(31, 43, 37, 0.15);
+  --tag-pill-text: #1F2B25;
+  --nav-bg: rgba(247, 246, 241, 0.94);
+  --nav-border: rgba(31, 43, 37, 0.12);
+  --nav-text: #1F2B25;
+  --nav-link-color: rgba(31, 43, 37, 0.70);
+  --nav-link-hover: #1F2B25;
+  --nav-link-hover-bg: rgba(31, 43, 37, 0.06);
+  --nav-cta-bg: #1F2B25;
+  --nav-cta-text: #F7F6F1;
+  --nav-logo-bg: rgba(31, 43, 37, 0.06);
+  --nav-logo-text: #1F2B25;
+  --nav-logo-border: rgba(31, 43, 37, 0.10);
+  --nav-shadow: 0 8px 24px -4px rgba(31, 43, 37, 0.10), 0 0 0 1px rgba(31, 43, 37, 0.04);
+  --nav-shadow-scrolled: 0 16px 36px -8px rgba(31, 43, 37, 0.14), 0 0 0 1px rgba(31, 43, 37, 0.06);
+  --cta-primary-badge-bg: rgba(0, 0, 0, 0.14);
 
   /* Status / Feedback colors */
-  --color-error: #EF4444;
-  --color-success: #10B981;
+  --color-error: #B3392F;
+  --color-success: #2E7D4F;
 
   /* Footer Dark Anchor Tokens (fixed dark across themes) */
-  --footer-bg: #0F1A2B;
-  --footer-text: #E8EEF8;
-  --footer-muted: #8FA1BD;
-  --footer-border: rgba(232, 238, 248, 0.10);
+  --footer-bg: #1A241E;
+  --footer-text: #DAD7CD;
+  --footer-muted: #9AA394;
+  --footer-border: rgba(218, 215, 205, 0.10);
 
   /* Overlay & Lightbox Tokens */
-  --overlay-backdrop: rgba(8, 13, 24, 0.94);
-  --overlay-bg: #0A101C;
+  --overlay-backdrop: rgba(13, 18, 15, 0.94);
+  --overlay-bg: #0F1511;
   --overlay-control-bg: rgba(255, 255, 255, 0.08);
   --overlay-control-border: rgba(255, 255, 255, 0.15);
   --overlay-control-hover: rgba(255, 255, 255, 0.12);
   --overlay-text: #FFFFFF;
   --overlay-muted: rgba(255, 255, 255, 0.72);
   --overlay-subtle: rgba(255, 255, 255, 0.35);
-  --caption-gradient: linear-gradient(to top, rgba(8, 13, 24, 0.90) 0%, rgba(8, 13, 24, 0.45) 45%, transparent 100%);
+  --caption-gradient: linear-gradient(to top, rgba(13, 18, 15, 0.90) 0%, rgba(13, 18, 15, 0.45) 45%, transparent 100%);
 
   /* Initial Loader Tokens */
-  --loader-bg: #0B1220;
-  --loader-text: #E8EEF8;
-  --loader-muted: rgba(232, 238, 248, 0.18);
-  --loader-track: rgba(232, 238, 248, 0.08);
+  --loader-bg: #141B17;
+  --loader-text: #DAD7CD;
+  --loader-muted: rgba(218, 215, 205, 0.18);
+  --loader-track: rgba(218, 215, 205, 0.08);
 
-  /* Heatmap: pale blue to cobalt ramp */
-  --heatmap-0: rgba(15, 26, 43, 0.05);
-  --heatmap-1: #DCE8F8;
-  --heatmap-2: #A9C4EA;
-  --heatmap-3: var(--earth);
+  /* Heatmap: Dust Grey to Dry Sage to Fern to Hunter Green */
+  --heatmap-0: rgba(31, 43, 37, 0.05);
+  --heatmap-1: #D5DCC4;
+  --heatmap-2: #A3B18A;
+  --heatmap-3: #588157;
   --heatmap-4: var(--accent);
 
   /* Emil Kowalski motion curves */
@@ -88,44 +88,44 @@
 
 .dark,
 [data-theme="dark"] {
-  /* Midnight Navy & Sky Glow (Dark Mode) */
-  --canvas: #0B1220;          /* Deep midnight navy */
-  --surface: #111A2C;
-  --surface-elevated: #18233A;
-  --foreground: #E8EEF8;      /* Cool off-white */
-  --muted: #9AABC4;           /* Soft steel (about 7:1 on canvas) */
-  --accent: #5B9BFF;          /* Bright sky blue (about 6.8:1 on canvas) */
-  --accent-hover: #7DB1FF;
-  --accent-glow: rgba(91, 155, 255, 0.22);
-  --earth: #7FA3D6;
-  --slate-navy: #1B2740;
-  --espresso: #0A101C;
-  --border: rgba(232, 238, 248, 0.08);
-  --border-strong: rgba(232, 238, 248, 0.14);
-  --pill-bg: rgba(17, 26, 44, 0.85);
-  --pill-border: rgba(232, 238, 248, 0.12);
-  --dock-bg: rgba(17, 26, 44, 0.90);
-  --dock-border: rgba(232, 238, 248, 0.14);
-  --grid-line: rgba(232, 238, 248, 0.03);
-  --cta-primary-bg: #5B9BFF;
-  --cta-primary-text: #0B1220;/* Dark navy on sky blue (about 6.8:1) */
-  --cta-secondary-bg: #18233A;
-  --cta-secondary-text: #E8EEF8;
-  --cta-secondary-border: rgba(232, 238, 248, 0.18);
-  --social-btn-bg: #141E33;
-  --social-btn-text: #E8EEF8;
-  --social-btn-border: rgba(232, 238, 248, 0.14);
+  /* Night Forest Palette (Dark Mode) */
+  --canvas: #141B17;          /* Deep pine night */
+  --surface: #1A241E;
+  --surface-elevated: #233028;
+  --foreground: #DAD7CD;      /* Dust Grey (about 12:1 on canvas) */
+  --muted: #9AA394;           /* Faded sage (about 6.7:1) */
+  --accent: #A3B18A;          /* Dry Sage (about 7.7:1) */
+  --accent-hover: #B7C49F;
+  --accent-glow: rgba(163, 177, 138, 0.20);
+  --earth: #588157;           /* Fern (secondary tone) */
+  --slate-navy: #2B3B31;
+  --espresso: #0F1511;
+  --border: rgba(218, 215, 205, 0.08);
+  --border-strong: rgba(218, 215, 205, 0.14);
+  --pill-bg: rgba(26, 36, 30, 0.85);
+  --pill-border: rgba(218, 215, 205, 0.12);
+  --dock-bg: rgba(26, 36, 30, 0.90);
+  --dock-border: rgba(218, 215, 205, 0.14);
+  --grid-line: rgba(218, 215, 205, 0.03);
+  --cta-primary-bg: #A3B18A;
+  --cta-primary-text: #141B17;/* Dark pine on Dry Sage (about 7.7:1) */
+  --cta-secondary-bg: #233028;
+  --cta-secondary-text: #DAD7CD;
+  --cta-secondary-border: rgba(218, 215, 205, 0.18);
+  --social-btn-bg: #1E2A23;
+  --social-btn-text: #DAD7CD;
+  --social-btn-border: rgba(218, 215, 205, 0.14);
   --tag-pill-bg: transparent;
-  --tag-pill-border: rgba(232, 238, 248, 0.14);
-  --tag-pill-text: #E8EEF8;
-  --nav-bg: #0F1729;
+  --tag-pill-border: rgba(218, 215, 205, 0.14);
+  --tag-pill-text: #DAD7CD;
+  --nav-bg: #1A241E;
   --nav-border: rgba(255, 255, 255, 0.08);
   --nav-text: #FFFFFF;
   --nav-link-color: rgba(255, 255, 255, 0.72);
   --nav-link-hover: #FFFFFF;
   --nav-link-hover-bg: rgba(255, 255, 255, 0.09);
-  --nav-cta-bg: #FFFFFF;
-  --nav-cta-text: #0F1729;
+  --nav-cta-bg: #DAD7CD;
+  --nav-cta-text: #141B17;
   --nav-logo-bg: rgba(255, 255, 255, 0.08);
   --nav-logo-text: #FFFFFF;
   --nav-logo-border: rgba(255, 255, 255, 0.12);
@@ -134,37 +134,37 @@
   --cta-primary-badge-bg: rgba(0, 0, 0, 0.18);
 
   /* Status / Feedback colors */
-  --color-error: #F87171;
-  --color-success: #34D399;
+  --color-error: #F0786B;
+  --color-success: #6FCF97;
 
   /* Footer Dark Anchor Tokens */
-  --footer-bg: #0A101C;
-  --footer-text: #E8EEF8;
-  --footer-muted: #8FA1BD;
-  --footer-border: rgba(232, 238, 248, 0.10);
+  --footer-bg: #0F1511;
+  --footer-text: #DAD7CD;
+  --footer-muted: #9AA394;
+  --footer-border: rgba(218, 215, 205, 0.10);
 
   /* Overlay & Lightbox Tokens */
-  --overlay-backdrop: rgba(8, 13, 24, 0.94);
-  --overlay-bg: #0A101C;
+  --overlay-backdrop: rgba(13, 18, 15, 0.94);
+  --overlay-bg: #0F1511;
   --overlay-control-bg: rgba(255, 255, 255, 0.08);
   --overlay-control-border: rgba(255, 255, 255, 0.15);
   --overlay-control-hover: rgba(255, 255, 255, 0.12);
   --overlay-text: #FFFFFF;
   --overlay-muted: rgba(255, 255, 255, 0.72);
   --overlay-subtle: rgba(255, 255, 255, 0.35);
-  --caption-gradient: linear-gradient(to top, rgba(8, 13, 24, 0.90) 0%, rgba(8, 13, 24, 0.45) 45%, transparent 100%);
+  --caption-gradient: linear-gradient(to top, rgba(13, 18, 15, 0.90) 0%, rgba(13, 18, 15, 0.45) 45%, transparent 100%);
 
   /* Initial Loader Tokens */
-  --loader-bg: #0B1220;
-  --loader-text: #E8EEF8;
-  --loader-muted: rgba(232, 238, 248, 0.18);
-  --loader-track: rgba(232, 238, 248, 0.08);
+  --loader-bg: #141B17;
+  --loader-text: #DAD7CD;
+  --loader-muted: rgba(218, 215, 205, 0.18);
+  --loader-track: rgba(218, 215, 205, 0.08);
 
   /* Heatmap */
-  --heatmap-0: rgba(232, 238, 248, 0.05);
-  --heatmap-1: rgba(91, 155, 255, 0.20);
-  --heatmap-2: rgba(91, 155, 255, 0.45);
-  --heatmap-3: var(--earth);
+  --heatmap-0: rgba(218, 215, 205, 0.05);
+  --heatmap-1: rgba(163, 177, 138, 0.18);
+  --heatmap-2: rgba(163, 177, 138, 0.40);
+  --heatmap-3: #588157;
   --heatmap-4: var(--accent);
 }
 
