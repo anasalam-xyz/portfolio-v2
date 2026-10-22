@@ -92,7 +92,7 @@ export function Footer() {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [copied, setCopied] = React.useState(false);
 
-  
+
   // Subtle reveal animation on scroll (composite-only, no layout shift)
   useGSAP(
     () => {
@@ -183,7 +183,7 @@ export function Footer() {
 
   return (
     <footer
-      id="footer" 
+      id="footer"
       ref={footerRef}
       aria-label="Site footer and contact"
       className="theme-transition relative w-full pt-16 pb-8 overflow-hidden"
@@ -455,7 +455,7 @@ export function Footer() {
                         setMessage(e.target.value);
                         if (status === "error") setStatus("idle");
                       }}
-                      className="focus-ring w-full rounded-xl border px-3.5 py-2.5 text-xs sm:text-sm font-sans transition-colors resize-none disabled:opacity-60"
+                      className="placeholder:text-[var(--muted)] placeholder:opacity-70 focus-ring w-full rounded-xl border px-3.5 py-2.5 text-xs sm:text-sm font-sans transition-colors resize-none disabled:opacity-60"
                       style={{
                         background: "var(--surface-elevated)",
                         borderColor: "var(--border-strong)",

@@ -268,7 +268,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
             className="theme-transition font-bold tracking-tight"
             style={{ fontSize: "1.05rem", color: themeStyles.textPrimary }}
           >
-            {"<Anas/>"}
+            {"|-_-|"}
           </span>
         </a>
 

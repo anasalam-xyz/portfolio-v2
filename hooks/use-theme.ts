@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 
 export type Theme = "light" | "dark";
 
-let currentTheme: Theme = "light";
+let currentTheme: Theme = "dark";
 
 if (typeof window !== "undefined") {
   try {
@@ -13,7 +13,7 @@ if (typeof window !== "undefined") {
     if (saved === "light" || saved === "dark") {
       currentTheme = saved;
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      //currentTheme = "dark";
+      currentTheme = "dark";
     }
   } catch {
     // localStorage may be unavailable
