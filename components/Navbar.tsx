@@ -2,9 +2,11 @@
 
 import * as React from "react";
 import gsap from "gsap";
+import { motion } from "framer-motion";
 import { scrollToTarget } from "@/components/smooth-scroll";
 import { useTheme } from "@/hooks/use-theme";
 import { SwitchButton } from "@/components/kokonutui/switch-button";
+import { MobileMenu } from "@/components/MobileMenu";
 
 const NAV_LINKS = [
   { label: "Home", href: "#" },
@@ -53,7 +55,12 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
     () => false
   );
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [navWidth, setNavWidth] = React.useState<number | undefined>(undefined);
+
   const headerRef = React.useRef<HTMLElement>(null);
+  const navRef = React.useRef<HTMLElement>(null);
+  const mobileTriggerRef = React.useRef<HTMLButtonElement>(null);
   const navUlRef = React.useRef<HTMLUListElement>(null);
   const linkRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
   const isClickScrollingRef = React.useRef(false);
@@ -110,10 +117,41 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
     };
   }, [updateIndicator]);
 
+  // Dynamically measure navbar width so the mobile menu dropdown matches its width exactly
+  React.useEffect(() => {
+    if (!navRef.current) return;
+    const updateWidth = () => {
+      if (navRef.current) {
+        setNavWidth(navRef.current.offsetWidth);
+      }
+    };
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(navRef.current);
+    window.addEventListener("resize", updateWidth);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, []);
+
+  // Close mobile menu on desktop resize
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Click handler with scroll lock so underline doesn't jitter while animating
   const handleNavClick = React.useCallback(
-    (href: string, e: React.MouseEvent) => {
-      e.preventDefault();
+    (href: string, e?: React.MouseEvent) => {
+      if (e) e.preventDefault();
       setActiveHref(href);
       isClickScrollingRef.current = true;
       if (clickScrollTimeoutRef.current) {
@@ -134,6 +172,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
       setScrolled(window.scrollY > 20);
 
       if (isClickScrollingRef.current) return;
+      setIsMobileMenuOpen(false);
 
       const scrollHeight = document.documentElement.scrollHeight;
       const clientHeight = window.innerHeight;
@@ -245,10 +284,11 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
       ref={headerRef}
       data-hero-reveal="navbar"
       data-theme={currentTheme}
-      className="mx-auto w-fit fixed left-0 right-0 top-4 z-50 flex justify-center px-4 md:top-5"
+      className="mx-auto w-fit fixed left-0 right-0 top-4 z-50 flex flex-col items-center px-4 md:top-5 pointer-events-none"
     >
       <nav
-        className="opacity-90 backdrop-blur-xl theme-transition flex w-full max-w-3xl items-center justify-between gap-3 rounded-full px-4 py-2 font-sans backdrop-blur-md md:px-5 md:py-2.5"
+        ref={navRef}
+        className="pointer-events-auto backdrop-blur-xl theme-transition flex items-center justify-between gap-3 rounded-full px-4 py-2 font-sans md:px-5 md:py-2.5"
         style={{
           background: themeStyles.navBg,
           border: `1px solid ${themeStyles.navBorder}`,
@@ -256,14 +296,13 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
         }}
         aria-label="Primary navigation"
       >
-        {/* ── Logo with Neutral Tile ─────────────────────────────────── */}
+        {/* ── Desktop Logo (hidden on mobile) ────────────────────────── */}
         <a
           href="#"
-          className="pressable focus-ring flex min-h-[44px] shrink-0 items-center gap-2.5 rounded-full"
+          className="pressable focus-ring hidden sm:flex min-h-[44px] shrink-0 items-center gap-2.5 rounded-full"
           aria-label="Anas Alam — home"
           onClick={(e) => handleNavClick("#", e)}
         >
-
           <span
             className="theme-transition font-bold tracking-tight"
             style={{ fontSize: "1.05rem", color: themeStyles.textPrimary }}
@@ -271,6 +310,42 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
             {"|-_-|"}
           </span>
         </a>
+
+        {/* ── Mobile Hamburger / Exit (cross) Button on Navbar ───────── */}
+        <button
+          ref={mobileTriggerRef}
+          type="button"
+          id="mobile-nav-trigger"
+          aria-controls="mobile-nav-menu"
+          aria-expanded={isMobileMenuOpen}
+          aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          className="pressable focus-ring sm:hidden flex items-center justify-center min-w-[40px] min-h-[40px] rounded-full transition-colors duration-160 cursor-pointer select-none"
+          style={{
+            backgroundColor: isMobileMenuOpen ? themeStyles.hoverBg : "transparent",
+          }}
+        >
+          <div className="relative w-[18px] h-[12px] flex items-center justify-center" aria-hidden="true">
+            <motion.span
+              className="absolute block w-[18px] h-[2px] rounded-full"
+              style={{ backgroundColor: themeStyles.textPrimary }}
+              animate={{
+                rotate: isMobileMenuOpen ? 45 : 0,
+                y: isMobileMenuOpen ? 0 : -4,
+              }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            />
+            <motion.span
+              className="absolute block w-[18px] h-[2px] rounded-full"
+              style={{ backgroundColor: themeStyles.textPrimary }}
+              animate={{
+                rotate: isMobileMenuOpen ? -45 : 0,
+                y: isMobileMenuOpen ? 0 : 4,
+              }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </div>
+        </button>
 
         {/* ── Nav Links with Sliding Active Underline ─────────────── */}
         <ul
@@ -363,6 +438,23 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
           </a>
         </div>
       </nav>
+
+      {/* ── Mobile Menu Dropdown (rendered below navbar, matching width) ─ */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        items={NAV_LINKS.map(({ label, href }) => ({
+          label,
+          href,
+          onClick: () => {
+            setIsMobileMenuOpen(false);
+            handleNavClick(href);
+          },
+        }))}
+        activeHref={activeHref}
+        width={navWidth}
+        triggerRef={mobileTriggerRef}
+      />
     </header>
   );
 }
