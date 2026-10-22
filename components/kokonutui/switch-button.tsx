@@ -216,14 +216,19 @@ export default function SwitchButton({
   useEffect(() => {
     const root = document.documentElement;
     const read = () =>
-      setObserved(root.classList.contains("dark") ? "dark" : "light");
+      setObserved(
+        root.classList.contains("dark") || root.getAttribute("data-theme") === "dark"
+          ? "dark"
+          : "light"
+      );
     read();
     const observer = new MutationObserver(read);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    observer.observe(root, { attributes: true, attributeFilter: ["class", "data-theme"] });
     return () => observer.disconnect();
   }, []);
 
-  const current = observed && (theme ?? observed);
+  const current = theme ?? observed ?? "dark";
+  const isDark = current === "dark";
   const sizing = SIZES[size];
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -232,7 +237,7 @@ export default function SwitchButton({
       return;
     }
     const root = document.documentElement;
-    const from = theme ?? (root.classList.contains("dark") ? "dark" : "light");
+    const from = current;
     const next: Theme = from === "dark" ? "light" : "dark";
     const button = e.currentTarget;
 
@@ -246,6 +251,7 @@ export default function SwitchButton({
       // applies it in an effect: the reveal's snapshot needs it now. The
       // provider then sets the same value.
       root.classList.toggle("dark", next === "dark");
+      root.setAttribute("data-theme", next);
       root.style.colorScheme = next;
       onThemeChange?.(next);
       morph(before, next === "dark");
@@ -261,7 +267,7 @@ export default function SwitchButton({
   return (
     <button
       aria-label="Dark theme"
-      aria-pressed={current ? current === "dark" : undefined}
+      aria-pressed={isDark}
       className={cn(
         "group/switch relative inline-flex shrink-0 cursor-pointer select-none items-center justify-center rounded-lg font-medium",
         "border shadow-xs border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)]",
@@ -288,7 +294,10 @@ export default function SwitchButton({
         <mask id={maskId}>
           <rect fill="white" height="32" width="32" x="-4" y="-4" />
           <circle
-            className="translate-x-[10px] -translate-y-[10px] dark:translate-x-0 dark:translate-y-0"
+            className={cn(
+              isDark ? "translate-x-0 translate-y-0" : "translate-x-[10px] -translate-y-[10px]",
+              "dark:translate-x-0 dark:translate-y-0"
+            )}
             cx="17"
             cy="7"
             data-part="bite"
@@ -298,7 +307,11 @@ export default function SwitchButton({
         </mask>
         <g mask={`url(#${maskId})`}>
           <circle
-            className="origin-[12px_12px] [transform-box:view-box] dark:scale-[1.8]"
+            className={cn(
+              "origin-[12px_12px] [transform-box:view-box]",
+              isDark ? "scale-[1.8]" : "scale-100",
+              "dark:scale-[1.8]"
+            )}
             cx="12"
             cy="12"
             data-part="disc"
@@ -309,7 +322,11 @@ export default function SwitchButton({
         <g stroke="currentColor" strokeLinecap="round" strokeWidth="2">
           {RAYS.map((ray, index) => (
             <line
-              className="origin-[12px_12px] [transform-box:view-box] dark:scale-50 dark:opacity-0"
+              className={cn(
+                "origin-[12px_12px] [transform-box:view-box]",
+                isDark ? "scale-50 opacity-0" : "scale-100 opacity-100",
+                "dark:scale-50 dark:opacity-0"
+              )}
               data-index={index}
               data-part="ray"
               key={ray.deg}
@@ -324,13 +341,21 @@ export default function SwitchButton({
       {showLabel && (
         <span aria-hidden="true" className="grid leading-none" ref={labelRef}>
           <span
-            className="col-start-1 row-start-1 dark:opacity-0 dark:blur-[3px]"
+            className={cn(
+              "col-start-1 row-start-1",
+              isDark ? "opacity-0 blur-[3px]" : "opacity-100 blur-none",
+              "dark:opacity-0 dark:blur-[3px]"
+            )}
             data-part="label"
           >
             Light
           </span>
           <span
-            className="col-start-1 row-start-1 opacity-0 blur-[3px] dark:opacity-100 dark:blur-none"
+            className={cn(
+              "col-start-1 row-start-1",
+              isDark ? "opacity-100 blur-none" : "opacity-0 blur-[3px]",
+              "dark:opacity-100 dark:blur-none"
+            )}
             data-part="label"
           >
             Dark

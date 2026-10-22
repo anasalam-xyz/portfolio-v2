@@ -58,25 +58,30 @@ function transitionTheme(nextTheme: Theme) {
     !doc ||
     !("startViewTransition" in doc) ||
     typeof doc.startViewTransition !== "function" ||
-    prefersReduced ||
-    Boolean(doc.activeViewTransition)
+    prefersReduced
   ) {
     applyThemeChange(nextTheme);
     return;
   }
 
-  doc.startViewTransition(() => {
-    flushSync(() => {
-      applyThemeChange(nextTheme);
+  try {
+    const transition = doc.startViewTransition(() => {
+      flushSync(() => {
+        applyThemeChange(nextTheme);
+      });
     });
-  });
+    transition.finished.catch(() => {});
+  } catch {
+    // If a view transition is already in progress, apply theme change directly
+    applyThemeChange(nextTheme);
+  }
 }
 
 export function useTheme() {
   const theme = React.useSyncExternalStore<Theme>(
     subscribeTheme,
     () => currentTheme,
-    () => "light"
+    () => "dark"
   );
 
   React.useEffect(() => {

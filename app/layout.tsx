@@ -29,12 +29,12 @@ const SITE_URL = "https://anasalam.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Anas Alam — Full-Stack Developer",
+  title: "Anas Alam — Software Developer",
   description:
-    "Anas Alam is a full-stack developer from Ranchi, India, building AI-powered web apps with Next.js, TypeScript and PostgreSQL. Open to remote internships.",
+    "Anas Alam is a Software developer from Ranchi, India, building AI-powered web apps with Next.js, TypeScript and PostgreSQL. Open to remote internships.",
   keywords: [
     "Anas Alam",
-    "full-stack developer",
+    "Software developer",
     "Next.js",
     "TypeScript",
     "PostgreSQL",
@@ -47,14 +47,14 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "Anas Alam",
-    title: "Anas Alam — Full-Stack Developer",
+    title: "Anas Alam — Software Developer",
     description:
       "Full-stack developer building AI-powered web apps with Next.js, TypeScript and PostgreSQL.",
     locale: "en_IN",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anas Alam — Full-Stack Developer",
+    title: "Anas Alam — Software Developer",
     description:
       "Full-stack developer building AI-powered web apps with Next.js, TypeScript and PostgreSQL.",
     creator: "@anasalam_",
@@ -69,8 +69,8 @@ export const viewport: Viewport = {
   ],
 };
 
-// Runs before first paint: decides whether the loader shows at all.
-const loaderGate = `try{var s=sessionStorage.getItem("loader-seen"),r=matchMedia("(prefers-reduced-motion: reduce)").matches;document.documentElement.classList.add(s||r?"skip-loader":"is-loading")}catch(e){}`;
+// Runs before first paint: decides whether the loader shows and applies initial theme.
+const loaderGate = `try{var s=sessionStorage.getItem("loader-seen"),r=matchMedia("(prefers-reduced-motion: reduce)").matches;document.documentElement.classList.add(s||r?"skip-loader":"is-loading");var t=localStorage.getItem("hero-theme");if(!t)t="dark";document.documentElement.setAttribute("data-theme",t);if(t==="dark")document.documentElement.classList.add("dark");else document.documentElement.classList.remove("dark");}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
