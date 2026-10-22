@@ -186,9 +186,10 @@ export function Footer() {
       id="footer" 
       ref={footerRef}
       aria-label="Site footer and contact"
-      className="theme-transition relative w-full pt-16 pb-8 text-[#F4EFEA] overflow-hidden"
+      className="theme-transition relative w-full pt-16 pb-8 overflow-hidden"
       style={{
-        background: "var(--espresso, #181715)",
+        background: "var(--footer-bg)",
+        color: "var(--footer-text)",
       }}
     >
       {/* ── Desktop & Mobile Top-Edge Stepped Chamfer Silhouette ─────────────── */}
@@ -264,11 +265,11 @@ export function Footer() {
             1. INFO ROW ON DARK AREA
             Tagline/Logo on left + 2-3 Columns of Navigation on right
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <div className="pt-8 pb-14 border-b-2 border-[rgba(244,239,234,0.1)]">
+        <div className="pt-8 pb-14 border-b-2" style={{ borderColor: "var(--footer-border)" }}>
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
             {/* Left Column: Brand & Tagline */}
             <div className="max-w-sm">
-              <span className="font-serif text-2xl sm:text-3xl font-normal tracking-tight text-[#F4EFEA]">
+              <span className="font-serif text-2xl sm:text-3xl font-normal tracking-tight" style={{ color: "var(--footer-text)" }}>
                 Anas Alam
               </span>
             </div>
@@ -277,7 +278,7 @@ export function Footer() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs font-mono">
               {FOOTER_CONTENT.navColumns.map((col) => (
                 <div key={col.title} className="flex flex-col gap-2.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[#F4EFEA]">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--footer-text)" }}>
                     {col.title}
                   </span>
                   {col.links && (
@@ -289,7 +290,10 @@ export function Footer() {
                             {...(link.external
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
-                            className="text-[#A3978B] hover:text-[#F4EFEA] transition-colors inline-flex items-center gap-1 focus-ring rounded-xs"
+                            className="transition-colors inline-flex items-center gap-1 focus-ring rounded-xs"
+                            style={{ color: "var(--footer-muted)" }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--footer-text)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--footer-muted)")}
                             onClick={(e) => {
                               if (!link.external && link.href.startsWith("#")) {
                                 e.preventDefault();
@@ -305,7 +309,7 @@ export function Footer() {
                     </ul>
                   )}
                   {col.text && (
-                    <ul className="space-y-1.5 text-[#A3978B] text-[11px] leading-relaxed">
+                    <ul className="space-y-1.5 text-[11px] leading-relaxed" style={{ color: "var(--footer-muted)" }}>
                       {col.text.map((t, idx) => (
                         <li key={idx}>{t}</li>
                       ))}
@@ -325,8 +329,8 @@ export function Footer() {
           <div
             className="contact-card-chamfer relative w-full p-7 sm:p-12 transition-colors"
             style={{
-              background: "var(--surface, #FFFFFF)",
-              color: "var(--foreground, #1C1613)",
+              background: "var(--surface)",
+              color: "var(--foreground)",
             }}
           >
 
@@ -336,13 +340,13 @@ export function Footer() {
                 <div>
                   <h3
                     className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight leading-tight"
-                    style={{ color: "var(--foreground, #1C1613)" }}
+                    style={{ color: "var(--foreground)" }}
                   >
                     {FOOTER_CONTENT.heading}
                   </h3>
                   <p
                     className="mt-4 text-xs sm:text-sm leading-relaxed"
-                    style={{ color: "var(--muted, #63574A)" }}
+                    style={{ color: "var(--muted)" }}
                   >
                     {FOOTER_CONTENT.subheading}
                   </p>
@@ -369,7 +373,7 @@ export function Footer() {
                       className="text-[11px] font-semibold px-2 py-0.5 rounded-full transition-colors"
                       style={{
                         background: copied ? "var(--accent)" : "var(--surface)",
-                        color: copied ? "#FFFFFF" : "var(--accent)",
+                        color: copied ? "var(--cta-primary-text)" : "var(--accent)",
                       }}
                     >
                       {copied ? "Copied!" : "Copy"}
@@ -466,7 +470,7 @@ export function Footer() {
                     className="min-h-[20px] text-xs font-mono transition-opacity"
                   >
                     {status === "error" && (
-                      <div className="flex flex-wrap items-center gap-2 text-rose-500">
+                      <div className="flex flex-wrap items-center gap-2" style={{ color: "var(--color-error)" }}>
                         <span>{errorMessage || "Submission failed."}</span>
                         <span>
                           Try emailing directly:{" "}
@@ -480,7 +484,7 @@ export function Footer() {
                       </div>
                     )}
                     {status === "success" && (
-                      <p className="text-emerald-500 font-semibold flex items-center gap-1.5">
+                      <p className="font-semibold flex items-center gap-1.5" style={{ color: "var(--color-success)" }}>
                         <span>✓</span> Message sent successfully! I&apos;ll get back to you shortly.
                       </p>
                     )}
@@ -493,13 +497,13 @@ export function Footer() {
                       disabled={status === "loading" || status === "success"}
                       className="group pressable focus-ring inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs sm:text-sm font-bold shadow-xs transition-opacity hover:opacity-95 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                       style={{
-                        background: "var(--accent, #B5611A)",
-                        color: "#FFFFFF",
+                        background: "var(--accent)",
+                        color: "var(--cta-primary-text)",
                       }}
                     >
                       {status === "loading" ? (
                         <>
-                          <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                          <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
                           <span>Sending...</span>
                         </>
                       ) : status === "success" ? (
@@ -587,12 +591,21 @@ export function Footer() {
             3. FINE PRINT
             Copyright notice and smooth back-to-top link
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-        <div className="pt-6 border-t border-[rgba(244,239,234,0.1)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[#A3978B]">
+        <div
+          className="pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono"
+          style={{
+            borderColor: "var(--footer-border)",
+            color: "var(--footer-muted)",
+          }}
+        >
           <p>{FOOTER_CONTENT.copyright}</p>
           <a
             href="#"
             onClick={handleBackToTop}
-            className="hover:text-[#F4EFEA] transition-colors focus-ring rounded-xs"
+            className="transition-colors focus-ring rounded-xs"
+            style={{ color: "var(--footer-muted)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--footer-text)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--footer-muted)")}
             aria-label="Scroll back to top of the page"
           >
             {FOOTER_CONTENT.backToTopLabel}

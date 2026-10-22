@@ -402,16 +402,21 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
                 <div
                   className="caption-overlay absolute inset-0 flex flex-col justify-end p-3.5 sm:p-5 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 pointer-events-none"
                   style={{
-                    background:
-                      "linear-gradient(to top, rgba(18, 16, 14, 0.90) 0%, rgba(18, 16, 14, 0.45) 45%, transparent 100%)",
+                    background: "var(--caption-gradient)",
                   }}
                 >
-                  <span className="font-sans font-bold text-xs sm:text-sm text-white tracking-tight leading-snug">
+                  <span
+                    className="font-sans font-bold text-xs sm:text-sm tracking-tight leading-snug"
+                    style={{ color: "var(--overlay-text)" }}
+                  >
                     {piece.title}
                   </span>
-                  <div className="mt-1 flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono text-white/75">
+                  <div
+                    className="mt-1 flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono"
+                    style={{ color: "var(--overlay-muted)" }}
+                  >
                     <span className="truncate">{piece.medium}</span>
-                    <span className="shrink-0 font-semibold text-[var(--accent)]">
+                    <span className="shrink-0 font-semibold" style={{ color: "var(--accent)" }}>
                       {piece.year}
                     </span>
                   </div>
@@ -434,7 +439,7 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
           onTouchEnd={handleTouchEnd}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 select-none"
           style={{
-            background: "rgba(18, 16, 14, 0.94)",
+            background: "var(--overlay-backdrop)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
           }}
@@ -450,15 +455,15 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
             <span
               className="font-mono text-xs font-semibold tracking-wider px-3 py-1.5 rounded-full border pointer-events-auto"
               style={{
-                background: "rgba(255, 255, 255, 0.08)",
-                borderColor: "rgba(255, 255, 255, 0.15)",
-                color: "#FFFFFF",
+                background: "var(--overlay-control-bg)",
+                borderColor: "var(--overlay-control-border)",
+                color: "var(--overlay-text)",
               }}
               aria-live="polite"
             >
               <span>{String(activeIdx + 1).padStart(2, "0")}</span>
-              <span className="opacity-50"> / </span>
-              <span className="opacity-75">{String(sortedPieces.length).padStart(2, "0")}</span>
+              <span style={{ color: "var(--overlay-subtle)" }}> / </span>
+              <span style={{ color: "var(--overlay-muted)" }}>{String(sortedPieces.length).padStart(2, "0")}</span>
             </span>
 
             {/* 44x44px accessible touch target close button */}
@@ -467,11 +472,11 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
               type="button"
               onClick={closeLightbox}
               aria-label="Close lightbox"
-              className="group pressable focus-ring pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border transition-all hover:bg-white/10 active:scale-95"
+              className="group pressable focus-ring pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border transition-all active:scale-95 hover:bg-[var(--overlay-control-hover)]"
               style={{
-                background: "rgba(255, 255, 255, 0.08)",
-                borderColor: "rgba(255, 255, 255, 0.15)",
-                color: "#FFFFFF",
+                background: "var(--overlay-control-bg)",
+                borderColor: "var(--overlay-control-border)",
+                color: "var(--overlay-text)",
               }}
             >
               <svg
@@ -496,11 +501,11 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
             type="button"
             onClick={handlePrev}
             aria-label="Previous artwork"
-            className="group pressable focus-ring hidden sm:flex absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full border transition-all hover:bg-white/10 active:scale-95"
+            className="group pressable focus-ring hidden sm:flex absolute left-4 md:left-6 top-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full border transition-all active:scale-95 hover:bg-[var(--overlay-control-hover)]"
             style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              borderColor: "rgba(255, 255, 255, 0.15)",
-              color: "#FFFFFF",
+              background: "var(--overlay-control-bg)",
+              borderColor: "var(--overlay-control-border)",
+              color: "var(--overlay-text)",
             }}
           >
             <svg
@@ -524,11 +529,11 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
             type="button"
             onClick={handleNext}
             aria-label="Next artwork"
-            className="group pressable focus-ring hidden sm:flex absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full border transition-all hover:bg-white/10 active:scale-95"
+            className="group pressable focus-ring hidden sm:flex absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full border transition-all active:scale-95 hover:bg-[var(--overlay-control-hover)]"
             style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              borderColor: "rgba(255, 255, 255, 0.15)",
-              color: "#FFFFFF",
+              background: "var(--overlay-control-bg)",
+              borderColor: "var(--overlay-control-border)",
+              color: "var(--overlay-text)",
             }}
           >
             <svg
@@ -557,8 +562,8 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
             {/* Uncropped Image Container */}
             <div className="relative max-h-[70vh] sm:max-h-[74vh] w-auto overflow-hidden rounded-xl border shadow-2xl flex items-center justify-center"
               style={{
-                borderColor: "rgba(255, 255, 255, 0.12)",
-                background: "#14110F",
+                borderColor: "var(--overlay-control-border)",
+                background: "var(--overlay-bg)",
               }}
             >
               <Image
@@ -575,13 +580,19 @@ export function ArtSection({ theme = "light" }: ArtSectionProps) {
 
             {/* Bottom Metadata Info Card */}
             <div className="mt-4 text-center max-w-lg px-4">
-              <h3 className="font-serif text-lg sm:text-2xl font-normal text-white tracking-tight">
+              <h3
+                className="font-serif text-lg sm:text-2xl font-normal tracking-tight"
+                style={{ color: "var(--overlay-text)" }}
+              >
                 {activeArt.title}
               </h3>
-              <p className="mt-1 font-mono text-[11px] sm:text-xs text-white/70">
+              <p
+                className="mt-1 font-mono text-[11px] sm:text-xs"
+                style={{ color: "var(--overlay-muted)" }}
+              >
                 <span>{activeArt.medium}</span>
-                <span className="mx-2 text-white/30">·</span>
-                <span className="text-[var(--accent)] font-semibold">{activeArt.year}</span>
+                <span className="mx-2" style={{ color: "var(--overlay-subtle)" }}>·</span>
+                <span className="font-semibold" style={{ color: "var(--accent)" }}>{activeArt.year}</span>
               </p>
             </div>
           </div>

@@ -480,7 +480,7 @@ export function HeroSection({ theme = "light" }: HeroSectionProps) {
             <span
               className="group-hover:translate-x-1 transition-translate duration-200 flex h-5 w-5 items-center justify-center rounded-full"
               style={{
-                background: "rgba(0,0,0,0.12)",
+                background: "var(--cta-primary-badge-bg)",
                 color: "var(--cta-primary-text)",
               }}
               aria-hidden="true"

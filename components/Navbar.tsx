@@ -61,42 +61,23 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
 
   const isLight = currentTheme === "light";
 
-  // Explicit, high-contrast palette calibrated for light and dark modes
+  // Palette mapped strictly to CSS variables from globals.css
   const themeStyles = React.useMemo(() => {
-    return isLight
-      ? {
-          navBg: "rgba(255, 255, 255, 0.94)",
-          navBorder: "rgba(28, 22, 19, 0.12)",
-          navShadow: scrolled
-            ? "0 16px 36px -8px rgba(28, 22, 19, 0.12), 0 0 0 1px rgba(28, 22, 19, 0.06)"
-            : "0 8px 24px -4px rgba(28, 22, 19, 0.08), 0 0 0 1px rgba(28, 22, 19, 0.04)",
-          textPrimary: "#1C1613",
-          textMuted: "rgba(28, 22, 19, 0.70)",
-          logoBg: "rgba(28, 22, 19, 0.06)",
-          logoBorder: "rgba(28, 22, 19, 0.10)",
-          logoText: "#1C1613",
-          accent: "#B5611A", // Deep amber (6.0:1 contrast on white)
-          hoverBg: "rgba(28, 22, 19, 0.06)",
-          ctaBg: "#181715",
-          ctaText: "#FFFFFF",
-        }
-      : {
-          navBg: "#181715",
-          navBorder: "rgba(255, 255, 255, 0.08)",
-          navShadow: scrolled
-            ? "0 16px 40px -8px rgba(0, 0, 0, 0.50), 0 0 0 1px rgba(255, 255, 255, 0.08)"
-            : "0 10px 30px -6px rgba(0, 0, 0, 0.30), 0 0 0 1px rgba(255, 255, 255, 0.06)",
-          textPrimary: "#FFFFFF",
-          textMuted: "rgba(255, 255, 255, 0.72)",
-          logoBg: "rgba(255, 255, 255, 0.08)",
-          logoBorder: "rgba(255, 255, 255, 0.12)",
-          logoText: "#FFFFFF",
-          accent: "#E8953C",
-          hoverBg: "rgba(255, 255, 255, 0.09)",
-          ctaBg: "#FFFFFF",
-          ctaText: "#181715",
-        };
-  }, [isLight, scrolled]);
+    return {
+      navBg: "var(--nav-bg)",
+      navBorder: "var(--nav-border)",
+      navShadow: scrolled ? "var(--nav-shadow-scrolled)" : "var(--nav-shadow)",
+      textPrimary: "var(--nav-text)",
+      textMuted: "var(--nav-link-color)",
+      logoBg: "var(--nav-logo-bg)",
+      logoBorder: "var(--nav-logo-border)",
+      logoText: "var(--nav-logo-text)",
+      accent: "var(--accent)",
+      hoverBg: "var(--nav-link-hover-bg)",
+      ctaBg: "var(--nav-cta-bg)",
+      ctaText: "var(--nav-cta-text)",
+    };
+  }, [scrolled]);
 
   // Recalculate sliding underline geometry
   const updateIndicator = React.useCallback(() => {
@@ -371,7 +352,7 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
           {/* Adaptive CTA button */}
           <a
             href="mailto:anasalam.xyz@gmail.com"
-            className="inline-flex items-center justify-center group pressable focus-ring theme-transition shrink-0 rounded-full px-5 py-2 text-xs font-semibold shadow-xs"
+            className="inline-flex items-center justify-center pressable focus-ring theme-transition shrink-0 rounded-full px-5 py-2 text-xs font-semibold shadow-xs"
             style={{
               background: themeStyles.ctaBg,
               color: themeStyles.ctaText,
@@ -379,11 +360,6 @@ export function Navbar({ heroTheme, onToggleHeroTheme }: NavbarProps = {}) {
             aria-label="Send an email to Anas Alam"
           >
             <span>Say Hi!</span>
-            <svg className="opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 ml-1" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-
           </a>
         </div>
       </nav>

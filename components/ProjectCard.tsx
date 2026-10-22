@@ -188,7 +188,7 @@ export function ProjectCard({ project, index, priority = false }: ProjectCardPro
                 className="group/btn pressable focus-ring inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2 text-xs font-mono font-bold shadow-xs transition-opacity hover:opacity-95"
                 style={{
                   background: "var(--accent)",
-                  color: "var(--cta-primary-text, #181715)",
+                  color: "var(--cta-primary-text)",
                 }}
               >
                 <span>View Live</span>

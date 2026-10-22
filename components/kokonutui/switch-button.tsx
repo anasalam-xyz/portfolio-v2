@@ -264,12 +264,9 @@ export default function SwitchButton({
       aria-pressed={current ? current === "dark" : undefined}
       className={cn(
         "group/switch relative inline-flex shrink-0 cursor-pointer select-none items-center justify-center rounded-lg font-medium",
-        "border border-zinc-200 bg-white text-zinc-900 shadow-xs",
-        "dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100",
-        "hover:border-zinc-300 hover:bg-zinc-50 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/70",
-        "active:bg-zinc-100 dark:active:bg-zinc-800",
+        "border shadow-xs border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)]",
         "transition-[background-color,border-color] duration-150 ease-out",
-        "outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-zinc-500 dark:focus-visible:ring-offset-zinc-950",
+        "outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]",
         "disabled:pointer-events-none disabled:opacity-50",
         sizing.button,
         !showLabel && cn(sizing.square, "px-0"),
