@@ -294,10 +294,7 @@ export default function SwitchButton({
         <mask id={maskId}>
           <rect fill="white" height="32" width="32" x="-4" y="-4" />
           <circle
-            className={cn(
-              isDark ? "translate-x-0 translate-y-0" : "translate-x-[10px] -translate-y-[10px]",
-              "dark:translate-x-0 dark:translate-y-0"
-            )}
+            className="translate-x-[10px] -translate-y-[10px] dark:translate-x-0 dark:translate-y-0"
             cx="17"
             cy="7"
             data-part="bite"
@@ -307,11 +304,7 @@ export default function SwitchButton({
         </mask>
         <g mask={`url(#${maskId})`}>
           <circle
-            className={cn(
-              "origin-[12px_12px] [transform-box:view-box]",
-              isDark ? "scale-[1.8]" : "scale-100",
-              "dark:scale-[1.8]"
-            )}
+            className="origin-[12px_12px] [transform-box:view-box] dark:scale-[1.8]"
             cx="12"
             cy="12"
             data-part="disc"
@@ -322,11 +315,7 @@ export default function SwitchButton({
         <g stroke="currentColor" strokeLinecap="round" strokeWidth="2">
           {RAYS.map((ray, index) => (
             <line
-              className={cn(
-                "origin-[12px_12px] [transform-box:view-box]",
-                isDark ? "scale-50 opacity-0" : "scale-100 opacity-100",
-                "dark:scale-50 dark:opacity-0"
-              )}
+              className="origin-[12px_12px] [transform-box:view-box] dark:scale-50 dark:opacity-0"
               data-index={index}
               data-part="ray"
               key={ray.deg}
@@ -341,21 +330,13 @@ export default function SwitchButton({
       {showLabel && (
         <span aria-hidden="true" className="grid leading-none" ref={labelRef}>
           <span
-            className={cn(
-              "col-start-1 row-start-1",
-              isDark ? "opacity-0 blur-[3px]" : "opacity-100 blur-none",
-              "dark:opacity-0 dark:blur-[3px]"
-            )}
+            className="col-start-1 row-start-1 dark:opacity-0 dark:blur-[3px]"
             data-part="label"
           >
             Light
           </span>
           <span
-            className={cn(
-              "col-start-1 row-start-1",
-              isDark ? "opacity-100 blur-none" : "opacity-0 blur-[3px]",
-              "dark:opacity-100 dark:blur-none"
-            )}
+            className="col-start-1 row-start-1 opacity-0 blur-[3px] dark:opacity-100 dark:blur-none"
             data-part="label"
           >
             Dark

@@ -470,18 +470,18 @@ html.lenis body {
 }
 
 /* ─── View Transitions API: Smooth Light/Dark Mode Cross-Fade ───────────────── */
-::view-transition-old(root),
-::view-transition-new(root) {
+html:not([data-theme-reveal])::view-transition-old(root),
+html:not([data-theme-reveal])::view-transition-new(root) {
   animation-duration: 1s;
   animation-timing-function: var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
 }
 
-::view-transition-image-pair(root) {
+html:not([data-theme-reveal])::view-transition-image-pair(root) {
   isolation: isolate;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
+html:not([data-theme-reveal])::view-transition-old(root),
+html:not([data-theme-reveal])::view-transition-new(root) {
   mix-blend-mode: normal;
 }
 

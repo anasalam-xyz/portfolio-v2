@@ -53,12 +53,13 @@ function transitionTheme(nextTheme: Theme) {
       ? (document as Document & { activeViewTransition?: unknown })
       : null;
 
-  // Fallback to instant switch when View Transitions API is unsupported, prefers-reduced-motion is active, or a view transition is already running
+  // Fallback to instant switch when View Transitions API is unsupported, prefers-reduced-motion is active, or a view transition is already running (e.g. Kokonut UI reveal)
   if (
     !doc ||
     !("startViewTransition" in doc) ||
     typeof doc.startViewTransition !== "function" ||
-    prefersReduced
+    prefersReduced ||
+    doc.documentElement.hasAttribute("data-theme-reveal")
   ) {
     applyThemeChange(nextTheme);
     return;
