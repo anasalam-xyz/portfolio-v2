@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, DM_Sans, Quicksand } from "next/font/google";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { Loader } from "@/components/Loader";
@@ -24,10 +24,49 @@ const quicksand = Quicksand({
   variable: "--font-quicksand",
 });
 
+
+const SITE_URL = "https://anasalam.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Anas Alam",
+  metadataBase: new URL(SITE_URL),
+  title: "Anas Alam — Full-Stack Developer",
   description:
-    "Full-stack developer building AI-powered web apps with Next.js, TypeScript, and PostgreSQL.",
+    "Anas Alam is a full-stack developer from Ranchi, India, building AI-powered web apps with Next.js, TypeScript and PostgreSQL. Open to remote internships.",
+  keywords: [
+    "Anas Alam",
+    "full-stack developer",
+    "Next.js",
+    "TypeScript",
+    "PostgreSQL",
+    "portfolio",
+  ],
+  authors: [{ name: "Anas Alam", url: SITE_URL }],
+  creator: "Anas Alam",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Anas Alam",
+    title: "Anas Alam — Full-Stack Developer",
+    description:
+      "Full-stack developer building AI-powered web apps with Next.js, TypeScript and PostgreSQL.",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Anas Alam — Full-Stack Developer",
+    description:
+      "Full-stack developer building AI-powered web apps with Next.js, TypeScript and PostgreSQL.",
+    creator: "@anasalam_",
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FAF7F2" },
+    { media: "(prefers-color-scheme: dark)", color: "#12100E" },
+  ],
 };
 
 // Runs before first paint: decides whether the loader shows at all.
